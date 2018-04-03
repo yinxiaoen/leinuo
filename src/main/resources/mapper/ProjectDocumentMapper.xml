@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.spring.springboot.dao.ProjectDocumentDao">
+
+
+
+	<sql id="Base_Column_List">
+		id, documentName, documentDesc, documentContent,documentCode,categoryName,categoryCode,categoryID
+		,projectCode,projectName,taxPrice,finishDate,projectStatus,actionTime,createTime,createby
+		,actionBy,documentPath,imagePath
+	</sql>
+
+	<select id="findAllDocumentAndProject"  resultType="org.spring.springboot.domain.ProjectDocument" parameterType="org.spring.springboot.domain.ProjectDocument">
+		select
+		<include refid="Base_Column_List" />
+		from tbl_leinuo_document
+		<where>
+			<trim prefixOverrides="and">
+				<if test="documentName != null and documentName != ''">
+					AND documentName LIKE '%${documentName}%'
+				</if>
+				<if test="documentDesc != null and documentDesc != ''">
+					AND documentDesc LIKE '%${documentDesc}%'
+				</if>
+				<if test="documentCode != null and documentCode != ''">
+					AND documentCode  = #{documentCode}
+				</if>
+				<if test="categoryName != null and categoryName != ''">
+					AND categoryName = #{categoryName}
+				</if>
+				<if test="categoryCode != null and categoryCode != ''">
+					AND categoryCode = #{categoryCode}
+				</if>
+				<if test="categoryID != null ">
+					AND categoryID = #{categoryID}
+				</if>
+				<if test="projectCode != null and projectCode != ''">
+					AND projectCode = #{projectCode}
+				</if>
+				<if test="projectName != null and projectName != ''">
+					AND projectName LIKE '%${projectName}%'
+				</if>
+				<if test="taxPrice != null ">
+					AND taxPrice = #{taxPrice}
+				</if>
+				<if test="finishDate != null ">
+					AND finishDate = #{finishDate}
+				</if>
+				<if test="projectStatus != null ">
+					AND projectStatus=#{projectStatus}
+				</if>
+				<if test="createby != null and createby != ''">
+					AND createby LIKE '%${createby}%'
+				</if>
+				<if test="actionBy != null and actionBy != ''">
+					AND actionBy LIKE '%${actionBy}%'
+				</if>
+			        and action !=2
+			</trim>
+		</where>
+		ORDER  BY  createTime DESC
+	</select>
+
+
+
+
+	<insert id="insertDocumentAndProject" parameterType="org.spring.springboot.domain.ProjectDocument" >
+
+		insert into tbl_leinuo_document(
+		<if test="documentName != null  ">documentName,</if>
+		<if test="documentDesc != null  ">documentDesc,</if>
+		<if test="documentContent != null  ">documentContent,</if>
+		<if test="documentCode != null  ">documentCode,</if>
+		<if test="categoryName != null  ">categoryName,</if>
+		<if test="categoryCode != null  ">categoryCode,</if>
+		<if test="categoryID != null  ">categoryID,</if>
+		<if test="projectCode != null  ">projectCode,</if>
+		<if test="projectName != null  ">projectName,</if>
+		<if test="taxPrice != null  ">taxPrice,</if>
+		<if test="finishDate != null  ">finishDate,</if>
+		<if test="projectStatus != null  ">projectStatus,</if>
+		<if test="createby != null  ">createby,</if>
+		<if test="actionBy != null  ">actionBy,</if>
+		<if test="documentPath != null  ">documentPath,</if>
+		<if test="imagePath != null  ">imagePath,</if>
+		actionTime,createTime)
+		values(
+		<if test="documentName != null  ">#{documentName},</if>
+		<if test="documentDesc != null  ">#{documentDesc},</if>
+		<if test="documentContent != null  ">#{documentContent},</if>
+		<if test="documentCode != null  ">#{documentCode},</if>
+		<if test="categoryName != null  ">#{categoryName},</if>
+		<if test="categoryCode != null  ">#{categoryCode},</if>
+		<if test="categoryID != null  ">#{categoryID},</if>
+		<if test="projectCode != null  ">#{projectCode},</if>
+		<if test="projectName != null  ">#{projectName},</if>
+		<if test="taxPrice != null  ">#{taxPrice},</if>
+		<if test="finishDate != null  ">#{finishDate},</if>
+		<if test="projectStatus != null  ">#{projectStatus},</if>
+		<if test="createby != null  ">#{createby},</if>
+		<if test="actionBy != null  ">#{actionBy},</if>
+		<if test="documentPath != null  ">#{documentPath},</if>
+		<if test="imagePath != null  ">#{imagePath},</if>
+		date_format( now() ,'%Y%m%d%H%i%s'),
+		date_format( now() ,'%Y%m%d%H%i%s'))
+	</insert>
+
+
+
+	<!-- 修改记录，只修改只不为空的字段 -->
+	<update id="updateDocumentAndProject" parameterType="org.spring.springboot.domain.ProjectDocument" >
+		UPDATE tbl_leinuo_document SET
+		<trim  suffixOverrides="," >
+			<if test="documentName != null and documentName != '' ">
+				documentName=#{documentName},
+			</if>
+			<if test="documentDesc != null and documentDesc != '' ">
+				documentDesc=#{documentDesc},
+			</if>
+			<if test="documentContent != null and documentContent != '' ">
+				documentContent=#{documentContent},
+			</if>
+			<if test="documentCode != null and documentCode != '' ">
+				documentCode=#{documentCode},
+			</if>
+			<if test="categoryName != null and categoryName != '' ">
+				categoryName=#{categoryName},
+			</if>
+			<if test="categoryCode != null and categoryCode != '' ">
+				categoryCode=#{categoryCode},
+			</if>
+			<if test="categoryID != null and categoryID != '' ">
+				categoryID=#{categoryID},
+			</if>
+			<if test="projectCode != null and projectCode != '' ">
+				billCategory=#{billCategory},
+			</if>
+			<if test="projectName != null and projectName != '' ">
+				projectName=#{projectName},
+			</if>
+			<if test="taxPrice != null and taxPrice != '' ">
+				taxPrice=#{taxPrice},
+			</if>
+			<if test="finishDate != null and finishDate != '' ">
+				finishDate=#{finishDate},
+			</if>
+			<if test="projectStatus != null and projectStatus != '' ">
+				projectStatus=#{projectStatus},
+			</if>
+			<if test="actionBy != null and actionBy != ''  ">
+				actionBy=#{actionBy},
+			</if>
+			<if test="documentPath != null and documentPath != '' ">
+				documentPath=#{documentPath},
+			</if>
+			<if test="imagePath != null and imagePath != '' ">
+				imagePath=#{imagePath},
+			</if>
+
+			 actionTime = date_format( now() ,'%Y%m%d%H%i%s')
+		</trim>
+		WHERE id = #{id}
+	</update>
+
+	<!-- 删除记录 -->
+	<delete id="deleteDocumentAndProject" parameterType="java.util.Map">
+		DELETE 	 FROM tbl_leinuo_document WHERE id IN (${ids})
+	</delete>
+
+</mapper>

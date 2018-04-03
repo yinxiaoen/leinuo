@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.spring.springboot.dao.UserDao">
+	<sql id="Base_Column_List">
+		id, userName, passWord, telePhone,weChat,weChatName,actionTime,createTime
+	</sql>
+
+
+	<select id="loginUser"  resultType="org.spring.springboot.domain.UserDTO" parameterType="org.spring.springboot.domain.UserDTO">
+		select
+		<include refid="Base_Column_List" />
+		from tbl_leinuo_document
+		<where>
+			<trim prefixOverrides="and">
+				<if test="userName != null and userName != ''">
+					AND userName = #{userName}
+					AND passWord = #{passWord}
+				</if>
+				<if test="weChat != null and weChat != ''">
+					AND weChat  = #{weChat}
+				</if>
+				<if test="telePhone != null and telePhone != ''">
+					AND telePhone = #{telePhone}
+					AND passWord = #{passWord}
+				</if>
+			</trim>
+		</where>
+	</select>
+
+
+
+	<insert id="registerUser" parameterType="org.spring.springboot.domain.UserDTO" >
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into tbl_leinuo_user(
+		<if test="userName != null  ">userName,</if>
+		<if test="passWord != null  ">passWord,</if>
+		<if test="telePhone != null  ">telePhone,</if>
+		<if test="weChat != null  ">weChat,</if>
+		<if test="weChatName != null  ">weChatName,</if>
+		actionTime,createTime)
+		values(
+		<if test="documentName != null  ">#{userName},</if>
+		<if test="documentDesc != null  ">#{passWord},</if>
+		<if test="documentContent != null  ">#{telePhone},</if>
+		<if test="documentCode != null  ">#{weChat},</if>
+		<if test="categoryName != null  ">#{weChatName},</if>
+		date_format( now() ,'%Y%m%d%H%i%s'),
+		date_format( now() ,'%Y%m%d%H%i%s'))
+	</insert>
+
+
+</mapper>
