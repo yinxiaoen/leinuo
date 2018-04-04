@@ -1,8 +1,4 @@
 package org.spring.springboot.utils;
-import com.caucho.hessian.client.HessianProxyFactory;
-import com.gozap.service.client.GozapServiceApp;
-import com.gozap.service.client.GozapServiceResult;
-import com.gozap.service.client.dfs.GozapImageService;
 import org.spring.springboot.config.image.ImageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,12 +19,6 @@ public class ServiceCallByHessian {
      * @return 返回GozapServiceResult对象
      * @throws IOException
      */
-    public GozapServiceResult sendByHessian( String fileExt, byte[] fileByte) throws IOException {
-        String url = imageProperties.getUpLoadHosts();
-        HessianProxyFactory factory = new HessianProxyFactory();
-        GozapImageService service = (GozapImageService) factory.create(GozapImageService.class, url);
-        return service.uploadImage(GozapServiceApp.HUALALA, fileByte, fileExt);
 
-    }
 
 }

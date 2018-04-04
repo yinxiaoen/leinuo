@@ -34,7 +34,7 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>com.gozap.service</groupId>
             <artifactId>gozap-service-client</artifactId>
             <version>1.1.2</version>
@@ -48,7 +48,7 @@
                     <artifactId>logback-classic</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
         <!-- Spring Boot Mybatis 依赖 -->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
@@ -92,7 +92,7 @@
     </dependencies>
 
     <repositories>
-        <repository>
+ <!--       <repository>
             <id>gozap</id>
             <name>gozap Repository</name>
             <url>http://repo.gozap.com/repos/content/groups/public</url>
@@ -110,6 +110,6 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-        </repository>
+        </repository>-->
     </repositories>
 </project>

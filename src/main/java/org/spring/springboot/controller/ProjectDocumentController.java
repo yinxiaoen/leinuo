@@ -1,15 +1,11 @@
 package org.spring.springboot.controller;
 
-import com.gozap.service.client.GozapServiceResult;
 import org.spring.springboot.common.Result;
 import org.spring.springboot.config.ConfigBean;
-import org.spring.springboot.config.error.ErrorCode;
 import org.spring.springboot.config.image.ImageProperties;
 import org.spring.springboot.domain.DocumentUpLoadDTO;
 import org.spring.springboot.domain.ProjectDocument;
 import org.spring.springboot.domain.image.HttpResponseBean;
-import org.spring.springboot.domain.image.UploadFileResponseDTO;
-import org.spring.springboot.exception.BusinessException;
 import org.spring.springboot.service.ProjectDocumentService;
 import org.spring.springboot.utils.ServiceCallByHessian;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +65,7 @@ public class ProjectDocumentController {
     }
 
 
-    @RequestMapping("/addTemplateUpLoad")
+  /*  @RequestMapping("/addTemplateUpLoad")
     @ResponseBody
     public Object addTemplate(@RequestParam(value = "file", required = false) MultipartFile file)
     {
@@ -94,7 +90,7 @@ public class ProjectDocumentController {
             return new Result("001", e.getMessage());
         }
         return new Result("0", documentUpLoadDTO);
-    }
+    }*/
 
 
 
@@ -210,7 +206,7 @@ public class ProjectDocumentController {
         return fileName.substring(pos + 1);
     }
 
-    public static UploadFileResponseDTO getResult(GozapServiceResult result){
+  /*  public static UploadFileResponseDTO getResult(GozapServiceResult result){
         UploadFileResponseDTO message = new UploadFileResponseDTO();
         if(result.equals(GozapServiceResult.OK)) {
             String fileID = (String) result.getObject();
@@ -223,6 +219,6 @@ public class ProjectDocumentController {
             message.setSuccess(false);
         }
         return message;
-    }
+    }*/
 
 }
