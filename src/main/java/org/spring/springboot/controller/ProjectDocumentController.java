@@ -220,8 +220,8 @@ public class ProjectDocumentController {
 }
 
     public String word2007ToHtml(File file) throws Exception {
-
-        String targetFileName = config.getTbl_surf_html()+ Calendar.getInstance().getTimeInMillis()+".html";
+        String htmlName = + Calendar.getInstance().getTimeInMillis()+".html";
+        String targetFileName = config.getTbl_surf_glb_mul_file_path()+ htmlName;
         String imagePathStr = config.getTbl_surf_glb_mul_file_path()+"/image/";
         OutputStreamWriter outputStreamWriter = null;
         try {
@@ -239,7 +239,7 @@ public class ProjectDocumentController {
                 outputStreamWriter.close();
             }
         }
-        return targetFileName;
+        return config.getTbl_surf_html()+htmlName;
     }
 
     public static String getExtention(String fileName) {
