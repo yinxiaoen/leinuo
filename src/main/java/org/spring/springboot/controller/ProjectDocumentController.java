@@ -221,7 +221,7 @@ public class ProjectDocumentController {
 
     public String word2007ToHtml(File file) throws Exception {
 
-        String targetFileName = config.getTbl_surf_glb_mul_file_path()+ Calendar.getInstance().getTimeInMillis()+".html";
+        String targetFileName = config.getTbl_surf_html()+ Calendar.getInstance().getTimeInMillis()+".html";
         String imagePathStr = config.getTbl_surf_glb_mul_file_path()+"/image/";
         OutputStreamWriter outputStreamWriter = null;
         try {

@@ -12,4 +12,6 @@ import org.springframework.stereotype.Component;
 public class ConfigBean {
     @Value("${tbl_surf_glb_mul_file_path}")
     private String tbl_surf_glb_mul_file_path;
+    @Value("${tbl_surf_html}")
+    private String tbl_surf_html;
 }
