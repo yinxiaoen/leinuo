@@ -7,7 +7,7 @@
 	<sql id="Base_Column_List">
 		id, documentName, documentDesc, documentContent,documentCode,categoryName,categoryCode,categoryID
 		,projectCode,projectName,taxPrice,finishDate,projectStatus,actionTime,createTime,createby
-		,actionBy,documentPath,imagePath
+		,actionBy,documentPath,imagePath,projectID,htmlPath
 	</sql>
 
 	<select id="findAllDocumentAndProject"  resultType="org.spring.springboot.domain.ProjectDocument" parameterType="org.spring.springboot.domain.ProjectDocument">
@@ -31,11 +31,14 @@
 				<if test="categoryCode != null and categoryCode != ''">
 					AND categoryCode = #{categoryCode}
 				</if>
-				<if test="categoryID != null ">
+				<if test="categoryID != null  and categoryID != 0">
 					AND categoryID = #{categoryID}
 				</if>
 				<if test="projectCode != null and projectCode != ''">
 					AND projectCode = #{projectCode}
+				</if>
+				<if test="projectID != null and projectID != 0">
+					AND projectID = #{projectID}
 				</if>
 				<if test="projectName != null and projectName != ''">
 					AND projectName LIKE '%${projectName}%'
@@ -83,6 +86,8 @@
 		<if test="actionBy != null  ">actionBy,</if>
 		<if test="documentPath != null  ">documentPath,</if>
 		<if test="imagePath != null  ">imagePath,</if>
+		<if test="htmlPath != null  ">htmlPath,</if>
+		<if test="projectID != null  ">projectID,</if>
 		actionTime,createTime)
 		values(
 		<if test="documentName != null  ">#{documentName},</if>
@@ -101,6 +106,8 @@
 		<if test="actionBy != null  ">#{actionBy},</if>
 		<if test="documentPath != null  ">#{documentPath},</if>
 		<if test="imagePath != null  ">#{imagePath},</if>
+		<if test="htmlPath != null  ">#{htmlPath},</if>
+		<if test="projectID != null  ">#{projectID},</if>
 		date_format( now() ,'%Y%m%d%H%i%s'),
 		date_format( now() ,'%Y%m%d%H%i%s'))
 	</insert>
@@ -156,7 +163,9 @@
 			<if test="imagePath != null and imagePath != '' ">
 				imagePath=#{imagePath},
 			</if>
-
+			<if test="projectID != null and projectID != '' ">
+				projectID=#{projectID},
+			</if>
 			 actionTime = date_format( now() ,'%Y%m%d%H%i%s')
 		</trim>
 		WHERE id = #{id}

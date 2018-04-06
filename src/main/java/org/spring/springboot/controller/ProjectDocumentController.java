@@ -1,5 +1,14 @@
 package org.spring.springboot.controller;
 
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.converter.PicturesManager;
+import org.apache.poi.hwpf.converter.WordToHtmlConverter;
+import org.apache.poi.hwpf.usermodel.PictureType;
+import org.apache.poi.xwpf.converter.core.BasicURIResolver;
+import org.apache.poi.xwpf.converter.core.FileImageExtractor;
+import org.apache.poi.xwpf.converter.xhtml.XHTMLConverter;
+import org.apache.poi.xwpf.converter.xhtml.XHTMLOptions;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.spring.springboot.common.Result;
 import org.spring.springboot.config.ConfigBean;
 import org.spring.springboot.config.image.ImageProperties;
@@ -11,15 +20,21 @@ import org.spring.springboot.utils.ServiceCallByHessian;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.w3c.dom.Document;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -151,14 +166,19 @@ public class ProjectDocumentController {
         }
         //上传
         String path ="";
+        String htmlPath = "";
         try {
             path = config.getTbl_surf_glb_mul_file_path() + file.getOriginalFilename();
             file.transferTo(new File(path));
+            htmlPath = word2007ToHtml(new File(path));
         } catch (IOException e) {
             return new Result("001", e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         documentUpLoadDTO.setDocumentName(file.getOriginalFilename());
         documentUpLoadDTO.setUrlPath(path);
+        documentUpLoadDTO.setHtmlPath(htmlPath);
         return new Result("0", documentUpLoadDTO);
     }
 
@@ -199,12 +219,39 @@ public class ProjectDocumentController {
 
 }
 
+    public String word2007ToHtml(File file) throws Exception {
 
+        String targetFileName = config.getTbl_surf_glb_mul_file_path()+ Calendar.getInstance().getTimeInMillis()+".html";
+        String imagePathStr = config.getTbl_surf_glb_mul_file_path()+"/image/";
+        OutputStreamWriter outputStreamWriter = null;
+        try {
+            XWPFDocument document = new XWPFDocument(new FileInputStream(file));
+            XHTMLOptions options = XHTMLOptions.create();
+            // 存放图片的文件夹
+            options.setExtractor(new FileImageExtractor(new File(imagePathStr)));
+            // html中图片的路径
+            options.URIResolver(new BasicURIResolver("image"));
+            outputStreamWriter = new OutputStreamWriter(new FileOutputStream(targetFileName), "utf-8");
+            XHTMLConverter xhtmlConverter = (XHTMLConverter) XHTMLConverter.getInstance();
+            xhtmlConverter.convert(document, outputStreamWriter, options);
+        } finally {
+            if (outputStreamWriter != null) {
+                outputStreamWriter.close();
+            }
+        }
+        return targetFileName;
+    }
 
     public static String getExtention(String fileName) {
         int pos = fileName.lastIndexOf(".");
         return fileName.substring(pos + 1);
     }
+
+
+
+
+
+
 
   /*  public static UploadFileResponseDTO getResult(GozapServiceResult result){
         UploadFileResponseDTO message = new UploadFileResponseDTO();

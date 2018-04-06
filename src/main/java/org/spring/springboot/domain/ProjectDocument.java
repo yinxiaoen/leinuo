@@ -14,7 +14,8 @@ public class ProjectDocument {
     private String documentCode;
     private String categoryName;
     private String categoryCode;
-    private String categoryID;
+    private Integer categoryID;
+    private Integer projectID ;
     private String projectCode;
     private String projectName;
     private String taxPrice;
@@ -27,4 +28,5 @@ public class ProjectDocument {
     private String actionBy;
     private String documentPath;
     private String imagePath;
+    private String htmlPath;
 }
