@@ -1,9 +1,6 @@
 package org.spring.springboot.controller;
 
-import org.apache.poi.hwpf.HWPFDocument;
-import org.apache.poi.hwpf.converter.PicturesManager;
-import org.apache.poi.hwpf.converter.WordToHtmlConverter;
-import org.apache.poi.hwpf.usermodel.PictureType;
+
 import org.apache.poi.xwpf.converter.core.BasicURIResolver;
 import org.apache.poi.xwpf.converter.core.FileImageExtractor;
 import org.apache.poi.xwpf.converter.xhtml.XHTMLConverter;
@@ -16,20 +13,13 @@ import org.spring.springboot.domain.DocumentUpLoadDTO;
 import org.spring.springboot.domain.ProjectDocument;
 import org.spring.springboot.domain.image.HttpResponseBean;
 import org.spring.springboot.service.ProjectDocumentService;
-import org.spring.springboot.utils.ServiceCallByHessian;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.w3c.dom.Document;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -44,8 +34,6 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping("/leinuo")
 public class ProjectDocumentController {
-    @Autowired
-    private ServiceCallByHessian serviceCallByHessian;
     @Autowired
     private ProjectDocumentService projectDocumentService;
     @Autowired
@@ -80,78 +68,33 @@ public class ProjectDocumentController {
     }
 
 
-  /*  @RequestMapping("/addTemplateUpLoad")
-    @ResponseBody
-    public Object addTemplate(@RequestParam(value = "file", required = false) MultipartFile file)
-    {
-        if(file==null){
-            throw new BusinessException(ErrorCode.NO_IREPORT_FILE,"请选择模板在上传");
-        }
-        UploadFileResponseDTO message = new UploadFileResponseDTO();
-        DocumentUpLoadDTO  documentUpLoadDTO = new  DocumentUpLoadDTO();
-
-        try {
-            String fileName = file.getOriginalFilename();
-            String fileExt = getExtention(fileName);
-            byte[] fileByte = file.getBytes();
-            GozapServiceResult result = serviceCallByHessian.sendByHessian(fileExt,fileByte);
-            message = getResult(result);
-            String url = message.getUrl();
-            documentUpLoadDTO.setDocumentName(fileName);
-            documentUpLoadDTO.setUrlPath(url);
-        } catch (IOException e) {
-            message.setMsg("001");
-            message.setSuccess(false);
-            return new Result("001", e.getMessage());
-        }
-        return new Result("0", documentUpLoadDTO);
-    }*/
-
-
-
 
     @RequestMapping(value = "/templateDownLoad", method = RequestMethod.GET)
-    public void download(@PathParam("url") String url, HttpServletResponse httpResponse) {
-        OutputStream outputStream = null;
-        BufferedInputStream bis = null;
-        HttpURLConnection httpUrl = null;
-        URL destUrl = null;
+    public HttpServletResponse download(String path, HttpServletResponse response) {
         try {
-            String decoderUrl = URLDecoder.decode(url, "utf-8");
-            String imageUrl = imageProperties.getDownLoadHosts() + "/" + decoderUrl;
-            String name = imageUrl.substring(imageUrl.lastIndexOf('/'), imageUrl.length());
-            byte[] buf = new byte[1024];
-            int size = 0;
-            destUrl = new URL(imageUrl);
-            httpUrl = (HttpURLConnection) destUrl.openConnection();
-            httpUrl.connect();
-            bis = new BufferedInputStream(httpUrl.getInputStream());
-            httpResponse.setContentType("octets/stream");
-            httpResponse.addHeader("Content-Type", "text/html; charset=utf-8");
-            String downLoadName = new String(name.getBytes("gbk"), "iso8859-1");
-            httpResponse.setHeader("Content-Disposition", "attachment;fileName=" + downLoadName);
-            outputStream = httpResponse.getOutputStream();
-            while ((size = bis.read(buf)) != -1) {
-                outputStream.write(buf, 0, size);
-            }
-        } catch (Exception e) {
-        } finally {
-            try {
-                if (outputStream != null)
-                {
-                    outputStream.close();
-                }
-                if (bis != null){
-                    bis.close();
-                }
-                if (httpUrl != null){
-                    httpUrl.disconnect();
-                }
-            } catch (IOException e) {
-            } catch (NullPointerException e) {
-            }
+            // path是指欲下载的文件的路径。
+            File file = new File(path);
+            // 取得文件名。
+            String filename = file.getName();
+            // 以流的形式下载文件。
+            InputStream fis = new BufferedInputStream(new FileInputStream(path));
+            byte[] buffer = new byte[fis.available()];
+            fis.read(buffer);
+            fis.close();
+            // 清空response
+            response.reset();
+            // 设置response的Header
+            response.addHeader("Content-Disposition", "attachment;filename=" + new String(filename.getBytes()));
+            response.addHeader("Content-Length", "" + file.length());
+            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
+            response.setContentType("application/octet-stream");
+            toClient.write(buffer);
+            toClient.flush();
+            toClient.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
-
+        return response;
     }
 
 
@@ -167,10 +110,12 @@ public class ProjectDocumentController {
         //上传
         String path ="";
         String htmlPath = "";
+        String documentRealName = "";
         try {
             path = config.getTbl_surf_glb_mul_file_path() + file.getOriginalFilename();
             file.transferTo(new File(path));
             htmlPath = word2007ToHtml(new File(path));
+            documentRealName = file.getOriginalFilename();
         } catch (IOException e) {
             return new Result("001", e.getMessage());
         } catch (Exception e) {
@@ -179,6 +124,7 @@ public class ProjectDocumentController {
         documentUpLoadDTO.setDocumentName(file.getOriginalFilename());
         documentUpLoadDTO.setUrlPath(path);
         documentUpLoadDTO.setHtmlPath(htmlPath);
+        documentUpLoadDTO.setDocumentRealName(documentRealName);
         return new Result("0", documentUpLoadDTO);
     }
 
@@ -251,21 +197,5 @@ public class ProjectDocumentController {
 
 
 
-
-
-  /*  public static UploadFileResponseDTO getResult(GozapServiceResult result){
-        UploadFileResponseDTO message = new UploadFileResponseDTO();
-        if(result.equals(GozapServiceResult.OK)) {
-            String fileID = (String) result.getObject();
-            message.setUrl(fileID);
-            message.setCode("000");
-            message.setMsg("000");
-            message.setSuccess(true);
-        }else{
-            message.setMsg("001");
-            message.setSuccess(false);
-        }
-        return message;
-    }*/
 
 }

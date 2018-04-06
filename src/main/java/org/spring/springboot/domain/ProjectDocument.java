@@ -26,6 +26,7 @@ public class ProjectDocument {
     private Long createTime;
     private String createby;
     private String actionBy;
+    private String documentRealName;
     private String documentPath;
     private String imagePath;
     private String htmlPath;

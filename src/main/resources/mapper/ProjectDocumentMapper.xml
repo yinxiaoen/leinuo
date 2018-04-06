@@ -7,7 +7,7 @@
 	<sql id="Base_Column_List">
 		id, documentName, documentDesc, documentContent,documentCode,categoryName,categoryCode,categoryID
 		,projectCode,projectName,taxPrice,finishDate,projectStatus,actionTime,createTime,createby
-		,actionBy,documentPath,imagePath,projectID,htmlPath
+		,actionBy,documentPath,imagePath,projectID,htmlPath,documentRealName
 	</sql>
 
 	<select id="findAllDocumentAndProject"  resultType="org.spring.springboot.domain.ProjectDocument" parameterType="org.spring.springboot.domain.ProjectDocument">
@@ -84,6 +84,7 @@
 		<if test="projectStatus != null  ">projectStatus,</if>
 		<if test="createby != null  ">createby,</if>
 		<if test="actionBy != null  ">actionBy,</if>
+		<if test="documentRealName != null  ">documentRealName,</if>
 		<if test="documentPath != null  ">documentPath,</if>
 		<if test="imagePath != null  ">imagePath,</if>
 		<if test="htmlPath != null  ">htmlPath,</if>
@@ -104,6 +105,7 @@
 		<if test="projectStatus != null  ">#{projectStatus},</if>
 		<if test="createby != null  ">#{createby},</if>
 		<if test="actionBy != null  ">#{actionBy},</if>
+		<if test="documentRealName != null  ">#{documentRealName},</if>
 		<if test="documentPath != null  ">#{documentPath},</if>
 		<if test="imagePath != null  ">#{imagePath},</if>
 		<if test="htmlPath != null  ">#{htmlPath},</if>
@@ -156,6 +158,9 @@
 			</if>
 			<if test="actionBy != null and actionBy != ''  ">
 				actionBy=#{actionBy},
+			</if>
+			<if test="documentRealName != null and documentRealName != '' ">
+				documentRealName=#{documentRealName},
 			</if>
 			<if test="documentPath != null and documentPath != '' ">
 				documentPath=#{documentPath},

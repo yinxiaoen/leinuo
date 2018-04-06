@@ -10,4 +10,5 @@ public class DocumentUpLoadDTO {
     private  String documentName;
     private  String urlPath;
     private  String htmlPath;
+    private  String documentRealName;
 }

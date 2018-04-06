@@ -9,7 +9,7 @@
 	<select id="loginUser"  resultType="org.spring.springboot.domain.UserDTO" parameterType="org.spring.springboot.domain.UserDTO">
 		select
 		<include refid="Base_Column_List" />
-		from tbl_leinuo_document
+		from tbl_leinuo_user
 		<where>
 			<trim prefixOverrides="and">
 				<if test="userName != null and userName != ''">
