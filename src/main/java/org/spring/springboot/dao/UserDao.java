@@ -1,6 +1,7 @@
 package org.spring.springboot.dao;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.spring.springboot.domain.UserDTO;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
  */
 @Mapper
 public interface UserDao {
-    List<UserDao> loginUser(UserDTO userDTO);
-    void registerUser(UserDTO userDTO);
+    List<UserDTO> loginUser(UserDTO userDTO);
+    int registerUser(UserDTO userDTO);
+    UserDTO queryUserById(@Param("id") Long id);
 }

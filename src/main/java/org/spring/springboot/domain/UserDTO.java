@@ -15,4 +15,9 @@ public class UserDTO {
     private String weChatName;
     private Long actionTime;
     private Long createTime;
+    private Integer userType;
+    private String deviceID;
+    private Integer isLogin;
+    private String headImageUrl;
+    private String openid;
 }

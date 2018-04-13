@@ -26,7 +26,7 @@ public class UserController {
 
     @RequestMapping(value = "/user/login", method = RequestMethod.POST)
     public Object login(@RequestBody UserDTO userDTO) {
-        List<UserDao> list = userService.loginUser(userDTO);
+        List<UserDTO> list = userService.loginUser(userDTO);
         if(list!=null && list.size()>0){
             return new Result("0", "");
         }else{

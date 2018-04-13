@@ -90,7 +90,18 @@
             <artifactId>hessian</artifactId>
             <version>4.0.7</version>
         </dependency>
-
+        <!--httpClient-->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.poi</groupId>

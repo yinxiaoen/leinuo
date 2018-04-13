@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.spring.springboot.dao.DocumentUserRelationDao">
+
+
+
+	<sql id="Base_Column_List">
+		id, documentID, userID, isAttention,isRead,actionTime,createTime
+	</sql>
+
+	<select id="queryDocumentUserRelation"  resultType="org.spring.springboot.domain.DocumentUserRelationDTO" parameterType="org.spring.springboot.domain.DocumentUserRelationDTO">
+		select
+		<include refid="Base_Column_List" />
+		from tbl_leinuo_document_relation
+		<where>
+			<trim prefixOverrides="and">
+				<if test="userID != null and userID != ''">
+					AND userID = #{userID}
+				</if>
+				<if test="isAttention != null and isAttention != ''">
+					AND isAttention = #{isAttention}
+				</if>
+				<if test="isRead != null and isRead != ''">
+					AND isRead  = #{isRead}
+				</if>
+				<if test="documentID != null and documentID != ''">
+					AND documentID = #{documentID}
+				</if>
+			</trim>
+		</where>
+	</select>
+
+	<insert id="insertDocumentUserRelation" parameterType="org.spring.springboot.domain.DocumentUserRelationDTO" >
+		insert into tbl_leinuo_document_relation(
+		<if test="documentID != null  ">documentID,</if>
+		<if test="userID != null  ">userID,</if>
+		<if test="isAttention != null  ">isAttention,</if>
+		<if test="isRead != null  ">isRead,</if>
+		actionTime,createTime)
+		values(
+		<if test="documentID != null  ">#{documentID},</if>
+		<if test="userID != null  ">#{userID},</if>
+		<if test="isAttention != null  ">#{isAttention},</if>
+		<if test="isRead != null  ">#{isRead},</if>
+		date_format( now() ,'%Y%m%d%H%i%s'),
+		date_format( now() ,'%Y%m%d%H%i%s'))
+	</insert>
+
+	<!-- 修改记录，只修改只不为空的字段 -->
+	<update id="updateDocumentUserRelation" parameterType="org.spring.springboot.domain.DocumentUserRelationDTO" >
+		UPDATE tbl_leinuo_document_relation SET
+		<trim  suffixOverrides="," >
+			<if test="documentID != null and documentID != '' ">
+				documentID=#{documentID},
+			</if>
+			<if test="userID != null and userID != '' ">
+				userID=#{userID},
+			</if>
+			<if test="isRead != null and isRead != '' ">
+				isRead=#{isRead},
+			</if>
+			<if test="isAttention != null and isAttention != '' ">
+				isAttention=#{isAttention},
+			</if>
+			actionTime = date_format( now() ,'%Y%m%d%H%i%s')
+		</trim>
+		WHERE id = #{id}
+	</update>
+</mapper>

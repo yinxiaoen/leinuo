@@ -16,12 +16,17 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
     @Override
-    public List<UserDao> loginUser(UserDTO userDTO) {
+    public List<UserDTO> loginUser(UserDTO userDTO) {
         return userDao.loginUser(userDTO);
     }
 
     @Override
     public void registerUser(UserDTO userDTO) {
         userDao.registerUser(userDTO);
+    }
+
+    @Override
+    public UserDTO queryUserById(Long userID) {
+        return userDao.queryUserById(userID);
     }
 }
