@@ -6,6 +6,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.spring.springboot.common.Result;
 import org.spring.springboot.config.wechat.WeChatProperties;
+import org.spring.springboot.dao.RedisDao;
 import org.spring.springboot.domain.UserDTO;
 import org.spring.springboot.service.UserService;
 import org.spring.springboot.utils.CommonUtils;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by yinxiaoen on 2018/4/10.
@@ -27,9 +29,10 @@ public class WeChatController {
     private WeChatProperties weChatProperties;
     @Autowired
     private UserService userService;
-
+    @Autowired
+    RedisDao redisDao;
     @RequestMapping(value = "/getWebChatToken", method = RequestMethod.GET)
-    public Object getWebChatToken(String code) {
+    public Object getWebChatToken(String code,String loginToken) {
         //添加参数
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("appid", weChatProperties.getAppid());
@@ -38,7 +41,7 @@ public class WeChatController {
         paramMap.put("grant_type", weChatProperties.getGrant_type());
         HttpResponse response;
         String rep = null;
-        String webchatUser =null;
+        UserDTO userDTO = new UserDTO();
         try {
             Map<String, String> headers = new HashMap<>();
             headers.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
@@ -48,25 +51,25 @@ public class WeChatController {
             JSONObject obj= JSON.parseObject(rep);
             String accessToken = obj.getString("access_token");
             String openid = obj.getString("openid");
-            webchatUser =  getWeChatUser(accessToken,openid,"11111111");
-
+            userDTO =  getWeChatUser(accessToken,openid,"11111111",loginToken);
         } catch (Exception e) {
             String a =e.getMessage();
             System.out.print("");
         }
-        return new Result("0", webchatUser);
+        return new Result("0", userDTO);
     }
 
 
 
 
-    public String getWeChatUser(String token,String openID,String deviceID) {
+    public UserDTO getWeChatUser(String token,String openID,String deviceID,String loginToken) {
         //添加参数
         Map<String, String> paramMap = new HashMap();
         paramMap.put("access_token", token);
         paramMap.put("openid", openID);
         HttpResponse response;
         String rep = null;
+        UserDTO userDTO = new UserDTO();
         try {
             Map<String, String> headers = new HashMap<>();
             headers.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
@@ -76,20 +79,29 @@ public class WeChatController {
             JSONObject obj= JSON.parseObject(rep);
             String name = obj.getString("nickname");
             String headImage = obj.getString("headimgurl");
-            UserDTO userDTO = new UserDTO();
-            userDTO.setUserName(name);
-            userDTO.setWeChatName(headImage);
-            userDTO.setOpenid(openID);
-            userDTO.setDeviceID(deviceID);
-            userDTO.setUserType(3);
-            userDTO.setIsLogin(1);
-            List<UserDTO> list = userService.loginUser(userDTO);
-            if(CommonUtils.isEmpty(list)){
+            UserDTO returnUserDTO = new UserDTO();
+            if(CommonUtils.isBlank(loginToken) && redisDao.isHaveKey(loginToken)){
+                String loginedOpenID = redisDao.getValue(loginToken);
+                userDTO.setOpenid(loginedOpenID);
+                List<UserDTO> list = userService.loginUser(userDTO);
+                returnUserDTO = list.get(0);
+                returnUserDTO.setToken(loginedOpenID);
+                userDTO = returnUserDTO;
+            }else{
+                userService.deleteUserByOpenID(userDTO.getOpenid());
+                userDTO.setUserName(name);
+                userDTO.setWeChatName(name);
+                userDTO.setHeadImageUrl(headImage);
+                userDTO.setOpenid(openID);
+                userDTO.setDeviceID(openID);
+                userDTO.setUserType(3);
+                userDTO.setIsLogin(1);
+                userDTO.setToken(UUID.randomUUID().toString());
                 userService.registerUser(userDTO);
-                UserDTO user= userService.queryUserById(userDTO.getId());
+                redisDao.setKey(userDTO.getToken(),userDTO.getOpenid());
             }
         } catch (Exception e) {
         }
-        return rep;
+        return userDTO;
     }
 }

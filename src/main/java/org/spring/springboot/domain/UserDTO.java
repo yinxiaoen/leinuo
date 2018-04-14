@@ -20,4 +20,5 @@ public class UserDTO {
     private Integer isLogin;
     private String headImageUrl;
     private String openid;
+    private String token;
 }

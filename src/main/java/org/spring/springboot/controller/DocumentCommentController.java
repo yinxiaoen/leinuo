@@ -17,9 +17,11 @@ import java.util.List;
 public class DocumentCommentController{
     @Autowired
     private DocumentCommentService documentCommentService;
+
     @RequestMapping(value = "/document/queryDocumentCommentList", method = RequestMethod.POST)
     public Object queryDocumentCommentList(@RequestBody DocumentCommentDTO paramDTO) {
         List<DocumentCommentDTO> list =  documentCommentService.queryDocumentCommentList(paramDTO);
+
         return new Result("0", list);
     }
 

@@ -10,8 +10,9 @@
 
 	<select id="queryDocumentCommentList"  resultType="org.spring.springboot.domain.DocumentCommentDTO" parameterType="org.spring.springboot.domain.DocumentCommentDTO">
 		select
-		<include refid="Base_Column_List" />
-		from tbl_leinuo_document_comment
+
+		c.id,c.documentID,c.userID,u.userName,u.headImageUrl,c.comment,c.actionTime,c.createTime
+		from tbl_leinuo_document_comment c  left join tbl_leinuo_user  u on c.userID = u.id
 		<where>
 			<trim prefixOverrides="and">
 				<if test="userID != null and userID != ''">

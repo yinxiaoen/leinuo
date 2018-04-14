@@ -11,6 +11,7 @@ public class DocumentCommentDTO {
     private  Long documentID;
     private  Long userID;
     private  String userName;
+    private  String headImageUrl;
     private  String comment;
     private  Long createTime;
     private  Long actionTime;

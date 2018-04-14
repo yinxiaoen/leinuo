@@ -1,5 +1,6 @@
 package org.spring.springboot.service;
 
+import org.apache.ibatis.annotations.Param;
 import org.spring.springboot.domain.UserDTO;
 
 import java.util.List;
@@ -11,4 +12,5 @@ public interface UserService {
     List<UserDTO> loginUser(UserDTO userDTO);
     void registerUser(UserDTO userDTO);
     UserDTO queryUserById(Long userID);
+    void deleteUserByOpenID(@Param("openid") String openid);
 }

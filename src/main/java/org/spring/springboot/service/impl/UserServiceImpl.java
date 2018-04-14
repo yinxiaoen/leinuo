@@ -1,5 +1,6 @@
 package org.spring.springboot.service.impl;
 
+import org.apache.ibatis.annotations.Param;
 import org.spring.springboot.dao.UserDao;
 import org.spring.springboot.domain.UserDTO;
 import org.spring.springboot.service.UserService;
@@ -28,5 +29,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO queryUserById(Long userID) {
         return userDao.queryUserById(userID);
+    }
+
+    @Override
+    public void deleteUserByOpenID(@Param("openid") String openid) {
+        userDao.deleteUserByOpenID(openid);
     }
 }

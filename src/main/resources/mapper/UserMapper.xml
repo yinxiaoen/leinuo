@@ -23,6 +23,9 @@
 				<if test="deviceID != null  ">
 					AND deviceID = #{deviceID}
 				</if>
+				<if test="openid != null  ">
+					AND openid = #{openid}
+				</if>
 				<if test="weChat != null and weChat != ''">
 					AND weChat  = #{weChat}
 				</if>
@@ -67,6 +70,12 @@
 		date_format( now() ,'%Y%m%d%H%i%s'),
 		date_format( now() ,'%Y%m%d%H%i%s'))
 	</insert>
+
+
+	<!--删除订单关联-->
+	<delete id="deleteUserByOpenID" parameterType="java.util.Map">
+		DELETE 	 FROM tbl_leinuo_user WHERE  openid=#{openid}
+	</delete>
 
 
 </mapper>
