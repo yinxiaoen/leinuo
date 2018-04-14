@@ -38,19 +38,29 @@ public class WeChatController {
         paramMap.put("grant_type", weChatProperties.getGrant_type());
         HttpResponse response;
         String rep = null;
+        String webchatUser =null;
         try {
-            response = HttpUtil.doGet(weChatProperties.getHost(), weChatProperties.getPath(), "get", null,
+            Map<String, String> headers = new HashMap<>();
+            headers.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+            response = HttpUtil.doGet(weChatProperties.getHost(), weChatProperties.getPath(), "get", headers,
                      paramMap);
             rep = EntityUtils.toString(response.getEntity());
+            JSONObject obj= JSON.parseObject(rep);
+            String accessToken = obj.getString("access_token");
+            String openid = obj.getString("openid");
+            webchatUser =  getWeChatUser(accessToken,openid,"11111111");
+
         } catch (Exception e) {
+            String a =e.getMessage();
+            System.out.print("");
         }
-        return new Result("0", rep);
+        return new Result("0", webchatUser);
     }
 
 
 
-    @RequestMapping(value = "/getWeChatUser", method = RequestMethod.GET)
-    public Object getWeChatUser(String token,String openID,String deviceID) {
+
+    public String getWeChatUser(String token,String openID,String deviceID) {
         //添加参数
         Map<String, String> paramMap = new HashMap();
         paramMap.put("access_token", token);
@@ -58,9 +68,11 @@ public class WeChatController {
         HttpResponse response;
         String rep = null;
         try {
-            response = HttpUtil.doGet(weChatProperties.getHost(), weChatProperties.getPathu(), "get", null,
+            Map<String, String> headers = new HashMap<>();
+            headers.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+            response = HttpUtil.doGet(weChatProperties.getHost(), weChatProperties.getPathu(), "get", headers,
                     paramMap);
-            rep = EntityUtils.toString(response.getEntity());
+            rep = new String(EntityUtils.toString(response.getEntity(), "utf-8"));
             JSONObject obj= JSON.parseObject(rep);
             String name = obj.getString("nickname");
             String headImage = obj.getString("headimgurl");
@@ -78,6 +90,6 @@ public class WeChatController {
             }
         } catch (Exception e) {
         }
-        return new Result("0", rep);
+        return rep;
     }
 }

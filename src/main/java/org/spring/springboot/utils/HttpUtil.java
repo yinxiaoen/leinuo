@@ -9,6 +9,7 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -31,11 +32,16 @@ public class HttpUtil {
             throws Exception {
         HttpClient httpClient = wrapClient(host);
         HttpGet request = new HttpGet(buildUrl(host, path, querys));
-        if(null != headers){
+        //设置请求的报文头部的编码
+        request.setHeader(new BasicHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8"));
+        //设置期望服务端返回的编码
+        request.setHeader(new BasicHeader("Accept", "text/plain;charset=utf-8"));
+/*        if(null != headers){
             for (Map.Entry<String, String> e : headers.entrySet()) {
                 request.addHeader(e.getKey(), e.getValue());
+
             }
-        }
+        }*/
         return httpClient.execute(request);
     }
 
