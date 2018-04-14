@@ -24,7 +24,7 @@ public class DocumentUserRelationController {
         return new Result("0", list);
     }
 
-    @RequestMapping(value = "/document/queryProjectAndDocument", method = RequestMethod.POST)
+    @RequestMapping(value = "/document/insertDocumentUserRelation", method = RequestMethod.POST)
     public Object insertDocumentUserRelation(@RequestBody DocumentUserRelationDTO paramDTO) {
         documentUserRelationService.insertDocumentUserRelation(paramDTO);
         return new Result("0", "");
