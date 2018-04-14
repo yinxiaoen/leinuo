@@ -1,5 +1,6 @@
 package org.spring.springboot.controller;
 
+import org.spring.springboot.dao.RedisDao;
 import org.spring.springboot.domain.City;
 import org.spring.springboot.service.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,15 @@ public class CityRestController {
 
     @Autowired
     private CityService cityService;
-
+    @Autowired
+    RedisDao redisDao;
     @RequestMapping(value = "/api/city", method = RequestMethod.GET)
-    public City findOneCity(@RequestParam(value = "cityName", required = true) String cityName) {
-        return cityService.findCityByName(cityName);
+    public void findOneCity(@RequestParam(value = "cityName", required = true) String cityName) {
+     //   return cityService.findCityByName(cityName);
+        redisDao.setKey("name","forezp");
+        redisDao.isHaveKey("forezp");
+        redisDao.setKey("age","11");
+        System.out.print(redisDao.getValue("name"));
     }
 
 }
