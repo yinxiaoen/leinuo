@@ -22,6 +22,7 @@
 					AND documentID = #{documentID}
 				</if>
 			</trim>
+			order by c.createTime desc
 		</where>
 	</select>
 

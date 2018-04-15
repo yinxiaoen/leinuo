@@ -12,6 +12,7 @@ import java.util.List;
 @Mapper
 public interface UserDao {
     List<UserDTO> loginUser(UserDTO userDTO);
+    List<UserDTO> webchatQuery(UserDTO userDTO);
     int registerUser(UserDTO userDTO);
     UserDTO queryUserById(@Param("id") Long id);
     void deleteUserByOpenID(@Param("openid") String openid);

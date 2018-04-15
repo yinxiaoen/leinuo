@@ -14,8 +14,8 @@ public class ProjectDocument {
     private String documentCode;
     private String categoryName;
     private String categoryCode;
-    private Integer categoryID;
-    private Integer projectID ;
+    private Integer categoryID;  //1 企业产股权，2企业增资扩股 3实物资产 4 网络竞价 5 法律汇编 6 经典案例 7 山东磊诺 8提示文档
+    private Integer projectID ;  //1代表济南  2 代表北京  3代表 上海
     private String projectCode;
     private String projectName;
     private String taxPrice;

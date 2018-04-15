@@ -13,4 +13,5 @@ public interface UserService {
     void registerUser(UserDTO userDTO);
     UserDTO queryUserById(Long userID);
     void deleteUserByOpenID(@Param("openid") String openid);
+    List<UserDTO> webchatQuery(UserDTO userDTO);
 }

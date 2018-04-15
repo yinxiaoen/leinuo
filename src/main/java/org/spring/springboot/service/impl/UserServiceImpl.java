@@ -35,4 +35,9 @@ public class UserServiceImpl implements UserService {
     public void deleteUserByOpenID(@Param("openid") String openid) {
         userDao.deleteUserByOpenID(openid);
     }
+
+    @Override
+    public List<UserDTO> webchatQuery(UserDTO userDTO) {
+        return userDao.webchatQuery(userDTO);
+    }
 }

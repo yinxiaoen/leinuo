@@ -79,13 +79,13 @@ public class WeChatController {
             JSONObject obj= JSON.parseObject(rep);
             String name = obj.getString("nickname");
             String headImage = obj.getString("headimgurl");
+            userDTO.setOpenid(openID);
+            List<UserDTO> list = userService.webchatQuery(userDTO);
             UserDTO returnUserDTO = new UserDTO();
-            if(CommonUtils.isBlank(loginToken) && redisDao.isHaveKey(loginToken)){
-                String loginedOpenID = redisDao.getValue(loginToken);
-                userDTO.setOpenid(loginedOpenID);
-                List<UserDTO> list = userService.loginUser(userDTO);
+            if(!CommonUtils.isEmpty(list)){
+                //String loginedOpenID = redisDao.getValue(openID);
                 returnUserDTO = list.get(0);
-                returnUserDTO.setToken(loginedOpenID);
+                returnUserDTO.setToken(openID);
                 userDTO = returnUserDTO;
             }else{
                 userService.deleteUserByOpenID(userDTO.getOpenid());
@@ -98,7 +98,7 @@ public class WeChatController {
                 userDTO.setIsLogin(1);
                 userDTO.setToken(UUID.randomUUID().toString());
                 userService.registerUser(userDTO);
-                redisDao.setKey(userDTO.getToken(),userDTO.getOpenid());
+                //redisDao.setKey(userDTO.getToken(),userDTO.getOpenid());
             }
         } catch (Exception e) {
         }
