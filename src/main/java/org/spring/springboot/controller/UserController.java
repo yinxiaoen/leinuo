@@ -56,7 +56,9 @@ public class UserController {
         }else {
             List<UserDTO> list = userService.loginUser(userDTO);
             if (list != null && list.size() > 0) {
-                //redisDao.setKey(Md5tools.MD5(list.get(0).getPassWord()), list.get(0).getId().toString());
+                String token = Md5tools.MD5(list.get(0).getPassWord());
+                redisDao.setKey(token, list.get(0).getId().toString());
+                list.get(0).setToken(token);
                 return new Result("0", list.get(0));
             } else {
                 return new Result("01", "登录失败");

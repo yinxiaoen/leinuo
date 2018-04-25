@@ -141,6 +141,11 @@
             <artifactId>qcloudsms</artifactId>
             <version>1.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.0.20</version>
+        </dependency>
     </dependencies>
     <!-- build settings -->
     <build>
