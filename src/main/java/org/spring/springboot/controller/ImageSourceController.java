@@ -22,7 +22,7 @@ public class ImageSourceController {
 
     @RequestMapping(value = "/queryImageList", method = RequestMethod.POST)
     public Object queryImageList(@RequestBody ImageServerDTO imageServerDTO) {
-        List<ImageServerDTO> list =  imageSourceService.queryImageTypeList(imageServerDTO.getId());
+        List<ImageServerDTO> list =  imageSourceService.queryImageTypeList(imageServerDTO);
         return new Result("0", list);
     }
 

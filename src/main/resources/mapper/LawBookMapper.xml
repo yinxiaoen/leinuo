@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.spring.springboot.dao.LawBookDao">
+
+
+
+	<sql id="Base_Column_List">
+		id, title, bookUrl,createTime,actionTime,pageNo
+	</sql>
+
+	<select id="readBookList"  resultType="org.spring.springboot.domain.LawBookDTO" parameterType="org.spring.springboot.domain.LawBookDTO">
+		select
+		<include refid="Base_Column_List" />
+		from tbl_leinuo_lawbook
+		<where>
+			<trim prefixOverrides="and">
+				<if test="ids != null and ids != ''">
+					AND id in ( #{ids})
+				</if>
+
+				<if test="id != null and id != ''">
+					AND id = #{id}
+				</if>
+				<if test="pageNos != null and pageNos != ''">
+					AND pageNo = #{pageNos}
+				</if>
+			        and action !=2
+			</trim>
+		</where>
+		ORDER  BY  createTime DESC
+	</select>
+
+
+
+	<select id="readBookTitle"  resultType="org.spring.springboot.domain.LawBookDTO" parameterType="org.spring.springboot.domain.LawBookDTO">
+		select
+		<include refid="Base_Column_List" />
+		from tbl_leinuo_lawbook group by title 	ORDER  BY  id asc;
+	</select>
+
+
+</mapper>

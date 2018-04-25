@@ -9,6 +9,6 @@ import lombok.Data;
 public class DocumentUserRelationDTO {
     private Long documentID;
     private Long userID;
-    private Integer isAttention;
-    private Integer isRead;
+    private Integer isAttention;// 1是关注了 0 没有关注
+    private Integer isRead;//0 是没有阅读 1，是阅读了
 }

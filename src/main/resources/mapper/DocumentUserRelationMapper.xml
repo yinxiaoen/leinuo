@@ -28,6 +28,7 @@
 				</if>
 			</trim>
 		</where>
+		order by createTime desc;
 	</select>
 
 	<insert id="insertDocumentUserRelation" parameterType="org.spring.springboot.domain.DocumentUserRelationDTO" >

@@ -9,14 +9,18 @@
 	<select id="loginUser"  resultType="org.spring.springboot.domain.UserDTO" parameterType="org.spring.springboot.domain.UserDTO">
 		select
 		<include refid="Base_Column_List" />
-		from tbl_leinuo_user where  openid = #{openid}
+		from tbl_leinuo_user
 		<where>
 			<trim prefixOverrides="and">
-				<if test="isLogin == 1  and userType = 1">
+				<if test="isLogin == 1  and userType == 1">
 					AND userName = #{userName}
 					AND passWord = #{passWord}
 				</if>
-				<if test="isLogin == 1  and userType = 3">
+				<if test="isLogin == 1  and userType == 2">
+					AND telePhone = #{telePhone}
+					AND passWord = #{passWord}
+				</if>
+				<if test="isLogin == 1  and userType == 3">
 					AND openid  = #{openid}
 					AND deviceID  = #{deviceID}
 				</if>
@@ -67,6 +71,8 @@
 		<if test="deviceID != null  ">deviceID,</if>
 		<if test="userType != null  ">userType,</if>
 		<if test="openid != null  ">openid,</if>
+		<if test="headImageUrl != null  ">headImageUrl,</if>
+		<if test="email != null  ">email,</if>
 		actionTime,createTime)
 		values(
 		<if test="userName != null  ">#{userName},</if>
@@ -77,6 +83,8 @@
 		<if test="deviceID != null  ">#{deviceID},</if>
 		<if test="userType != null  ">#{userType},</if>
 		<if test="openid != null  ">#{openid},</if>
+		<if test="headImageUrl != null  ">#{headImageUrl},</if>
+		<if test="email != null  ">#{email},</if>
 		date_format( now() ,'%Y%m%d%H%i%s'),
 		date_format( now() ,'%Y%m%d%H%i%s'))
 	</insert>

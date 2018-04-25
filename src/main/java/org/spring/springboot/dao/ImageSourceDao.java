@@ -10,6 +10,6 @@ import java.util.List;
  */
 @Mapper
 public interface ImageSourceDao {
-    List<ImageServerDTO> queryImageTypeList(@Param("imageType") Integer imageType);
+    List<ImageServerDTO> queryImageTypeList(ImageServerDTO imageServerDTO);
 
 }

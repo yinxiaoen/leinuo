@@ -11,5 +11,5 @@ import java.util.List;
  * Date: 2018/4/14
  */
 public interface ImageSourceService {
-    List<ImageServerDTO> queryImageTypeList(@Param("imageType") Integer imageType);
+    List<ImageServerDTO> queryImageTypeList(ImageServerDTO imageServerDTO);
 }

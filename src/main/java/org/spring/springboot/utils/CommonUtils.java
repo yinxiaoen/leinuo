@@ -94,11 +94,6 @@ public class CommonUtils {
 
 
 
-
-
-
-
-
     /**时间+随机数的生产方法 **/
     public static String random() {
 
@@ -120,6 +115,22 @@ public class CommonUtils {
         return date + rnd;
     }
 
+
+
+    public static String getSMSLoginID(){
+        String random = "";
+        String[] doc = {"1348", "1562", "1739", "1846","1521", "4875", "3699","2284","7768","3422","1165","5733"};
+        int index = (int) (Math.random() * doc.length);
+        random = doc[index];
+        return random;
+    }
+
+
+    public static boolean isHaveSMSLoginID(String id){
+        String[] doc = {"1348", "1562", "1739", "1846","1521", "4875", "3699","2284","7768","3422","1165","5733"};
+        boolean flag = Arrays.asList(doc).contains(id);
+        return flag;
+    }
 
 
 }

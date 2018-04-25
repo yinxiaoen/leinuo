@@ -19,8 +19,8 @@ public class ImageSourceServiceImpl implements ImageSourceService {
     @Autowired
     private ImageSourceDao imageSourceDao;
     @Override
-    public List<ImageServerDTO> queryImageTypeList(@Param("imageType") Integer imageType) {
-        List<ImageServerDTO> list =  imageSourceDao.queryImageTypeList(imageType);
+    public List<ImageServerDTO> queryImageTypeList( ImageServerDTO imageServerDTO) {
+        List<ImageServerDTO> list =  imageSourceDao.queryImageTypeList(imageServerDTO);
         return list;
     }
 }

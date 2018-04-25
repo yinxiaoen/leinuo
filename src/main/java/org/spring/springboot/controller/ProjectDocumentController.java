@@ -127,6 +127,29 @@ public class ProjectDocumentController {
 
 
 
+    @RequestMapping("/addTemplateUpLoadHeadImage")
+    @ResponseBody
+    public Object addTemplateUpLoadHeadImage(@RequestParam(value = "file", required = false) MultipartFile file)
+    {
+        if (file.isEmpty()) {
+            return new Result("001", "");
+        }
+        //上传
+        String path ="";
+        try {
+            path = config.getHeadImage() + file.getOriginalFilename();
+            file.transferTo(new File(path));
+        } catch (IOException e) {
+            return new Result("001", e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new Result("0", path);
+    }
+
+
+
+
     /**
      * 上传多个文件
      *

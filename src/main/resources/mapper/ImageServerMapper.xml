@@ -6,7 +6,7 @@
 	</sql>
 
 
-	<select id="queryImageTypeList"  resultType="org.spring.springboot.domain.ImageServerDTO" parameterType="java.util.Map">
+	<select id="queryImageTypeList"  resultType="org.spring.springboot.domain.ImageServerDTO" parameterType="org.spring.springboot.domain.ImageServerDTO">
 		select
 		<include refid="Base_Column_List" />
 		from tbl_image_source where imageType = #{imageType}

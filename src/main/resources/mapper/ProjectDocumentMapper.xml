@@ -58,6 +58,9 @@
 				<if test="actionBy != null and actionBy != ''">
 					AND actionBy LIKE '%${actionBy}%'
 				</if>
+				<if test="id != null and id != ''">
+					AND id = #{id}
+				</if>
 			        and action !=2
 			</trim>
 		</where>
