@@ -1,5 +1,6 @@
 package org.spring.springboot.service;
 
+import org.apache.ibatis.annotations.Param;
 import org.spring.springboot.domain.DocumentUserRelationDTO;
 
 import java.util.List;
@@ -14,5 +15,7 @@ public interface DocumentUserRelationService {
     void insertDocumentUserRelation(DocumentUserRelationDTO documentUserRelationDTO);
 
     void updateDocumentUserRelation(DocumentUserRelationDTO documentUserRelationDTO);
+
+    Integer queryDocumentUserRelationCountsByID(@Param("documentID") Long documentID);
 
 }

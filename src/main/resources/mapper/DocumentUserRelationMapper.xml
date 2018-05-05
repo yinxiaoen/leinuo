@@ -10,25 +10,25 @@
 
 	<select id="queryDocumentUserRelation"  resultType="org.spring.springboot.domain.DocumentUserRelationDTO" parameterType="org.spring.springboot.domain.DocumentUserRelationDTO">
 		select
-		<include refid="Base_Column_List" />
-		from tbl_leinuo_document_relation
+		r.id, r.documentID, r.userID, r.isAttention,r.isRead,r.actionTime,d.documentName,d.documentCode,d.categoryName,d.taxPrice,d.finishDate
+		from tbl_leinuo_document_relation r left join tbl_leinuo_document d on  r.documentID = d.id
 		<where>
 			<trim prefixOverrides="and">
 				<if test="userID != null and userID != ''">
-					AND userID = #{userID}
+					AND  r.userID = #{userID}
 				</if>
 				<if test="isAttention != null and isAttention != ''">
-					AND isAttention = #{isAttention}
+					AND  r.isAttention = #{isAttention}
 				</if>
 				<if test="isRead != null and isRead != ''">
-					AND isRead  = #{isRead}
+					AND  r.isRead  = #{isRead}
 				</if>
 				<if test="documentID != null and documentID != ''">
-					AND documentID = #{documentID}
+					AND  r.documentID = #{documentID}
 				</if>
 			</trim>
 		</where>
-		order by createTime desc;
+		order by  r.createTime desc;
 	</select>
 
 	<insert id="insertDocumentUserRelation" parameterType="org.spring.springboot.domain.DocumentUserRelationDTO" >
@@ -67,4 +67,13 @@
 		</trim>
 		WHERE id = #{id}
 	</update>
+
+
+	<select id="queryDocumentUserRelationCountsByID"  resultType="java.lang.Integer" parameterType="java.util.Map">
+		select
+		count(1)
+		from tbl_leinuo_document_relation
+		where documentID=#{documentID}
+	</select>
+
 </mapper>

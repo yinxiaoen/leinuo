@@ -1,4 +1,5 @@
 package org.spring.springboot.dao;
+import org.apache.ibatis.annotations.Param;
 import org.spring.springboot.domain.DocumentUserRelationDTO;
 import java.util.List;
 
@@ -12,4 +13,6 @@ public interface DocumentUserRelationDao {
     void insertDocumentUserRelation(DocumentUserRelationDTO documentUserRelationDTO);
 
     void updateDocumentUserRelation(DocumentUserRelationDTO documentUserRelationDTO);
+
+    Integer queryDocumentUserRelationCountsByID(@Param("documentID") Long documentID);
 }

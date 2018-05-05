@@ -15,14 +15,14 @@
 		<where>
 			<trim prefixOverrides="and">
 				<if test="ids != null and ids != ''">
-					AND id in ( #{ids})
+					AND id in (${ids})
 				</if>
 
 				<if test="id != null and id != ''">
 					AND id = #{id}
 				</if>
 				<if test="pageNos != null and pageNos != ''">
-					AND pageNo = #{pageNos}
+					AND pageNo in (${pageNos})
 				</if>
 			        and action !=2
 			</trim>

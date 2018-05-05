@@ -30,4 +30,5 @@ public class ProjectDocument {
     private String documentPath;
     private String imagePath;
     private String htmlPath;
+    private String  categoryIDs;
 }

@@ -83,9 +83,12 @@ public class WeChatController {
             List<UserDTO> list = userService.webchatQuery(userDTO);
             UserDTO returnUserDTO = new UserDTO();
             if(!CommonUtils.isEmpty(list)){
+
                 //String loginedOpenID = redisDao.getValue(openID);
                 returnUserDTO = list.get(0);
                 returnUserDTO.setToken(openID);
+                returnUserDTO.setHeadImageUrl(headImage);
+                userService.updateUserInformation(returnUserDTO);
                 userDTO = returnUserDTO;
             }else{
                 userService.deleteUserByOpenID(userDTO.getOpenid());

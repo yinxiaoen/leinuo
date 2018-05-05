@@ -13,7 +13,10 @@ import java.util.List;
 public interface UserDao {
     List<UserDTO> loginUser(UserDTO userDTO);
     List<UserDTO> webchatQuery(UserDTO userDTO);
+
+    List<UserDTO> queryUserByTel(UserDTO userDTO);
     int registerUser(UserDTO userDTO);
     UserDTO queryUserById(@Param("id") Long id);
     void deleteUserByOpenID(@Param("openid") String openid);
+    void updateUserInformation(UserDTO userDTO);
 }

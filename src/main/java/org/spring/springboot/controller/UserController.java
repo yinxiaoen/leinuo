@@ -11,6 +11,8 @@ import org.spring.springboot.utils.TencentSmsSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.List;
 
 /**
@@ -28,8 +30,16 @@ public class UserController {
     RedisDao redisDao;
     @RequestMapping(value = "/user/registerUser", method = RequestMethod.POST)
     public Object registerUser(@RequestBody UserDTO userDTO) {
-        userService.registerUser(userDTO);
-        return new Result("0", "");
+        UserDTO userDTO1 =new UserDTO();
+        userDTO1.setTelePhone(userDTO.getTelePhone());
+        List<UserDTO>list=userService.queryUserByTel(userDTO);
+        if(CommonUtils.isEmpty(list)){
+            userService.registerUser(userDTO);
+            return new Result("0", "注册成功，请返回登陆页面登陆",true,"");
+        }else{
+            return new Result("01", "该手机号已经注册过",false,"");
+        }
+
     }
 
 
@@ -78,6 +88,28 @@ public class UserController {
             e.printStackTrace();
             return new Result("01", "获取验证吗失败");
         }
+    }
+
+
+    @RequestMapping(value = "/user/updateUserInformation", method = RequestMethod.POST)
+    public Object updateUserInformation(@RequestBody UserDTO userDTO) {
+        try {
+        userService.updateUserInformation(userDTO);
+        return new Result("0", "");
+        } catch (Exception e) {
+            // 网络IO错误
+            e.printStackTrace();
+            return new Result("01", "修改失败");
+        }
+    }
+
+
+    public static void main(String [] args){
+        BigDecimal big = new BigDecimal(2.1430000);
+        NumberFormat nf = NumberFormat.getInstance();
+        nf.setMinimumFractionDigits(2);
+        System.out.println(nf.format(big));
+
     }
 
 

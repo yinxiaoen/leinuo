@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.spring.springboot.dao.UserDao">
 	<sql id="Base_Column_List">
-		id, userName, passWord, telePhone,weChat,weChatName,actionTime,createTime,headImageUrl,deviceID,userType,openid
+		id, userName, passWord, telePhone,weChat,weChatName,actionTime,createTime,headImageUrl,deviceID,userType,openid,email
 	</sql>
 
 
@@ -52,8 +52,14 @@
 
 
 	<select id="queryUserById" parameterType="java.util.Map" resultType="org.spring.springboot.domain.UserDTO">
+	select <include refid="Base_Column_List" />
+	from tbl_leinuo_user where id = #{id}
+
+</select>
+
+	<select id="queryUserByTel" parameterType="java.util.Map" resultType="org.spring.springboot.domain.UserDTO">
 		select <include refid="Base_Column_List" />
-		from tbl_leinuo_user where id = #{id}
+		from tbl_leinuo_user where telePhone = #{telePhone}
 
 	</select>
 
@@ -94,6 +100,33 @@
 	<delete id="deleteUserByOpenID" parameterType="java.util.Map">
 		DELETE 	 FROM tbl_leinuo_user WHERE  openid=#{openid}
 	</delete>
+
+
+
+
+	<!-- 修改记录，只修改只不为空的字段 -->
+	<update id="updateUserInformation" parameterType="org.spring.springboot.domain.UserDTO" >
+		UPDATE tbl_leinuo_user SET
+		<trim  suffixOverrides="," >
+			<if test="userName != null and userName != '' ">
+				userName=#{userName},
+			</if>
+			<if test="passWord != null and passWord != '' ">
+				passWord=#{passWord},
+			</if>
+			<if test="telePhone != null and telePhone != '' ">
+				telePhone=#{telePhone},
+			</if>
+			<if test="headImageUrl != null and headImageUrl != '' ">
+				headImageUrl=#{headImageUrl},
+			</if>
+			<if test="email != null and email != '' ">
+				email=#{email},
+			</if>
+			actionTime = date_format( now() ,'%Y%m%d%H%i%s')
+		</trim>
+		WHERE id = #{id}
+	</update>
 
 
 </mapper>

@@ -40,4 +40,14 @@ public class UserServiceImpl implements UserService {
     public List<UserDTO> webchatQuery(UserDTO userDTO) {
         return userDao.webchatQuery(userDTO);
     }
+
+    @Override
+    public void updateUserInformation(UserDTO userDTO) {
+        userDao.updateUserInformation(userDTO);
+    }
+
+    @Override
+    public List<UserDTO> queryUserByTel(UserDTO userDTO) {
+        return userDao.queryUserByTel(userDTO);
+    }
 }

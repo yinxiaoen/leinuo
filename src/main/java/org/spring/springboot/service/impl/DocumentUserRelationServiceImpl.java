@@ -1,5 +1,6 @@
 package org.spring.springboot.service.impl;
 
+import org.apache.ibatis.annotations.Param;
 import org.spring.springboot.dao.DocumentUserRelationDao;
 import org.spring.springboot.domain.DocumentUserRelationDTO;
 import org.spring.springboot.service.DocumentUserRelationService;
@@ -30,5 +31,10 @@ public class DocumentUserRelationServiceImpl implements DocumentUserRelationServ
     @Override
     public void updateDocumentUserRelation(DocumentUserRelationDTO documentUserRelationDTO) {
         documentUserRelationDao.updateDocumentUserRelation(documentUserRelationDTO);
+    }
+
+    @Override
+    public Integer queryDocumentUserRelationCountsByID(@Param("documentID") Long documentID) {
+        return documentUserRelationDao.queryDocumentUserRelationCountsByID(documentID);
     }
 }

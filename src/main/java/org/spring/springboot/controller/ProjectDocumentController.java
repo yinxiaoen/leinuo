@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.*;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -136,15 +138,17 @@ public class ProjectDocumentController {
         }
         //上传
         String path ="";
+        String realPath = "";
         try {
             path = config.getHeadImage() + file.getOriginalFilename();
             file.transferTo(new File(path));
+            realPath = config.getTbl_surf_html()+config.getRealImage()+ file.getOriginalFilename();
         } catch (IOException e) {
             return new Result("001", e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new Result("0", path);
+        return new Result("0", realPath);
     }
 
 
@@ -212,8 +216,6 @@ public class ProjectDocumentController {
         int pos = fileName.lastIndexOf(".");
         return fileName.substring(pos + 1);
     }
-
-
 
 
 

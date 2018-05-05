@@ -16,4 +16,6 @@ public class ConfigBean {
     private String tbl_surf_html;
     @Value("${tbl_surf_glb_mul_headimage_file_path}")
     private String headImage;
+    @Value("${tbl_surf_real_image}")
+    private String realImage;
 }

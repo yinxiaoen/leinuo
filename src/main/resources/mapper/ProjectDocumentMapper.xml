@@ -61,6 +61,9 @@
 				<if test="id != null and id != ''">
 					AND id = #{id}
 				</if>
+				<if test="categoryIDs != null  and categoryIDs != ''">
+					AND categoryID in    (${categoryIDs})
+				</if>
 			        and action !=2
 			</trim>
 		</where>
