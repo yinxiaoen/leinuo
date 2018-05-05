@@ -125,6 +125,25 @@ public class CommonUtils {
         return random;
     }
 
+    public static String getHeadImg(){
+        String random = "";
+        String[] doc = {"http://39.107.247.32:8081/sourceImg/konglong.png",
+                "http://39.107.247.32:8081/sourceImg/langgou.png",
+                "http://39.107.247.32:8081/sourceImg/tuzi.png",
+                "http://39.107.247.32:8081/sourceImg/waixinren.png",
+                "http://39.107.247.32:8081/sourceImg/xiaohu.png",
+                "http://39.107.247.32:8081/sourceImg/xiaoji.png",
+                "http://39.107.247.32:8081/sourceImg/xiaomao.png",
+                "http://39.107.247.32:8081/sourceImg/xiaozhu.png",
+                "http://39.107.247.32:8081/sourceImg/xiongmao.png"};
+        int index = (int) (Math.random() * doc.length);
+        random = doc[index];
+        return random;
+    }
+
+
+
+
 
     public static boolean isHaveSMSLoginID(String id){
         String[] doc = {"1348", "1562", "1739", "1846","1521", "4875", "3699","2284","7768","3422","1165","5733"};

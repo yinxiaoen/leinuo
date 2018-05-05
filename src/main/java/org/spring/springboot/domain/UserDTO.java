@@ -22,5 +22,5 @@ public class UserDTO {
     private String openid;
     private String token;
     private String smsCode;
-    private String email;
+    private String email = "";
 }

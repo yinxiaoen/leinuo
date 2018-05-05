@@ -8,6 +8,7 @@ import org.spring.springboot.service.UserService;
 import org.spring.springboot.utils.CommonUtils;
 import org.spring.springboot.utils.Md5tools;
 import org.spring.springboot.utils.TencentSmsSender;
+import org.spring.springboot.utils.ToolsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,26 +31,82 @@ public class UserController {
     RedisDao redisDao;
     @RequestMapping(value = "/user/registerUser", method = RequestMethod.POST)
     public Object registerUser(@RequestBody UserDTO userDTO) {
+        /**
+         * 判断验证码是否正确
+         */
+        if(CommonUtils.isBlank(userDTO.getHeadImageUrl())){
+            userDTO.setHeadImageUrl(CommonUtils.getHeadImg());
+        }
+        Boolean  codeIsRight = CommonUtils.isHaveSMSLoginID(userDTO.getSmsCode());
+        if(!codeIsRight){
+            return new Result("01", "验证码不正确,请重新输入",false,"");
+        }
         UserDTO userDTO1 =new UserDTO();
         userDTO1.setTelePhone(userDTO.getTelePhone());
         List<UserDTO>list=userService.queryUserByTel(userDTO);
         if(CommonUtils.isEmpty(list)){
             userService.registerUser(userDTO);
-            return new Result("0", "注册成功，请返回登陆页面登陆",true,"");
+            return new Result("0", userDTO);
         }else{
-            return new Result("01", "该手机号已经注册过",false,"");
+            if(list.get(0).getUserType()==2){
+                userDTO.setId(list.get(0).getId());
+                userDTO.setUserType(0);
+                userService.updateUserInformation(userDTO);
+                return new Result("0", userDTO);
+            }else{
+                return new Result("01", "该手机号已经注册过",false,"");
+            }
         }
-
     }
 
+    @RequestMapping(value = "/user/telQuickLogin", method = RequestMethod.POST)
+    public Object telQuickLogin(@RequestBody UserDTO userDTO) {
+        Boolean  codeIsRight = CommonUtils.isHaveSMSLoginID(userDTO.getSmsCode());
+        if(!codeIsRight){
+            return new Result("01", "验证码不正确",false,"");
+        }
+        if(CommonUtils.isBlank(userDTO.getToken())){
+            String id = redisDao.getValue(userDTO.getToken());
+            if(CommonUtils.isBlank(id)){
+                UserDTO user = userService.queryUserById(Long.valueOf(id));
+                if(null == user){
+                    return new Result("01", "token 已经失效，请重新登陆");
+                }else{
+                    return new Result("0", user);
+                }
+            }else{
+                return new Result("01", "token 已经失效，请重新登陆");
+            }
+        }else {
+            List<UserDTO> userList = userService.queryUserByTel(userDTO);
+            if(CommonUtils.isEmpty(userList)){
+                userDTO.setHeadImageUrl(CommonUtils.getHeadImg());
+                userDTO.setUserName("游侠"+ToolsUtils.getRandomString(4));
+                userDTO.setPassWord(ToolsUtils.getRandomString(8));
+                /**
+                 * 手机快速登陆，没有账号就注册  userType = 2
+                 */
+                userDTO.setUserType(2);
+                userService.registerUser(userDTO);
+                return new Result("0", userDTO);
+            }else{
+                return new Result("0", userList.get(0));
+            }
 
-    @RequestMapping(value = "/user/isSmsRight", method = RequestMethod.POST)
-        public Object isSmsRight(@RequestBody UserDTO userDTO) {
+        }
+    }
+
+    /**
+     * 判断验证码是否正确
+     * @param userDTO
+     * @return
+     */
+    public Object isSmsRight(UserDTO userDTO) {
             Boolean  codeIsRight = CommonUtils.isHaveSMSLoginID(userDTO.getSmsCode());
           if(codeIsRight){
               return new Result("0", "");
           }else{
-              return new Result("01", "");
+              return new Result("01", "验证码不正确",false,"");
           }
     }
 
@@ -104,7 +161,7 @@ public class UserController {
     }
 
 
-    public static void main(String [] args){
+    public static void mainTest(){
         BigDecimal big = new BigDecimal(2.1430000);
         NumberFormat nf = NumberFormat.getInstance();
         nf.setMinimumFractionDigits(2);
