@@ -74,7 +74,6 @@
 
 
 	<insert id="insertDocumentAndProject" parameterType="org.spring.springboot.domain.ProjectDocument" >
-
 		insert into tbl_leinuo_document(
 		<if test="documentName != null  ">documentName,</if>
 		<if test="documentDesc != null  ">documentDesc,</if>
@@ -186,5 +185,7 @@
 	<delete id="deleteDocumentAndProject" parameterType="java.util.Map">
 		DELETE 	 FROM tbl_leinuo_document WHERE id IN (${ids})
 	</delete>
+
+
 
 </mapper>

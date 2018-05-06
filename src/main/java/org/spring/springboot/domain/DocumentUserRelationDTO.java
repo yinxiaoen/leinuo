@@ -18,4 +18,5 @@ public class DocumentUserRelationDTO {
     private String projectName;
     private String taxPrice;
     private Long finishDate;
+    private Long id;
 }
