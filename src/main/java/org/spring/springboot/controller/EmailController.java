@@ -1,6 +1,7 @@
 package org.spring.springboot.controller;
 
 import org.spring.springboot.common.Result;
+import org.spring.springboot.dao.RedisDao;
 import org.spring.springboot.domain.ProjectDocument;
 import org.spring.springboot.domain.SendEmailDTO;
 import org.spring.springboot.domain.UserDTO;
@@ -30,6 +31,8 @@ public class EmailController {
     @Autowired
     private UserService userService;
     @Autowired
+    RedisDao redisDao;
+    @Autowired
     private ProjectDocumentService projectDocumentService;
     @Value("${spring.mail.username}")
     private String Sender; //读取配置文件中的参数
@@ -47,6 +50,10 @@ public class EmailController {
         }
         MimeMessage message = null;
         try {
+            String key = list.get(0).getDocumentRealName()+sendEmailDTO.getUserID();
+            if(redisDao.isHaveKey(key)){
+                return new Result("01", "已发送过，请稍后再试",false,"");
+            }
             message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(Sender);
@@ -57,10 +64,11 @@ public class EmailController {
             FileSystemResource file = new FileSystemResource(new File(list.get(0).getDocumentPath()));
             //加入邮件
             helper.addAttachment(list.get(0).getDocumentRealName(), file);
+            redisDao.setKeyByMin(key, "发送邮件给"+user.getUserName()+" 邮件："+list.get(0).getDocumentRealName());
+            mailSender.send(message);
         } catch (Exception e){
             e.printStackTrace();
         }
-        mailSender.send(message);
         return new Result("0", "success");
     }
 

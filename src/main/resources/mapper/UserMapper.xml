@@ -59,7 +59,7 @@
 
 	<select id="queryUserByTel" parameterType="java.util.Map" resultType="org.spring.springboot.domain.UserDTO">
 		select <include refid="Base_Column_List" />
-		from tbl_leinuo_user where telePhone = #{telePhone} and userType= #{userType}
+		from tbl_leinuo_user where telePhone = #{telePhone}
 
 	</select>
 

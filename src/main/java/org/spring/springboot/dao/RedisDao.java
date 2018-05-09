@@ -30,4 +30,9 @@ public class RedisDao {
         Boolean isHashKey = template.hasKey(key);
         return isHashKey;
     }
+
+    public  void setKeyByMin(String key,String value){
+        ValueOperations<String, String> ops = template.opsForValue();
+        ops.set(key,value,15, TimeUnit.MINUTES);//1分钟过期
+    }
 }

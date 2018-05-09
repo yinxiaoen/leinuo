@@ -128,7 +128,7 @@ public class UserController {
                 list.get(0).setToken(token);
                 return new Result("0", list.get(0));
             } else {
-                return new Result("01", "登录失败");
+                return new Result("01", "账号或密码不正确",false,"");
             }
         }
     }
@@ -143,7 +143,7 @@ public class UserController {
         } catch (Exception e) {
             // 网络IO错误
             e.printStackTrace();
-            return new Result("01", "获取验证吗失败");
+            return new Result("01", "获取验证吗失败",false,"");
         }
     }
 
