@@ -69,7 +69,7 @@ public class EmailController {
         } catch (Exception e){
             e.printStackTrace();
         }
-        return new Result("0", "success");
+        return new Result("0", "");
     }
 
 

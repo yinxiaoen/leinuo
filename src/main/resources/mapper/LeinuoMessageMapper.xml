@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.spring.springboot.dao.LeinuoMessageDao">
+	<sql id="Base_Column_List">
+		id, userID, messageContent, messageTitle,documentID,isRead,actionTime,createTime
+	</sql>
+
+	<select id="queryMessageByUserID"  resultType="org.spring.springboot.domain.LeinuoMessageDTO" parameterType="org.spring.springboot.domain.LeinuoMessageDTO">
+		select
+		<include refid="Base_Column_List" />
+		from tbl_leinuo_message
+		<where>
+		     <trim>
+				<if test="isRead != null and isRead != ''">
+					AND isRead  = #{isRead}
+				</if>
+				<if test="userID != null and userID != ''">
+					AND userID = #{userID}
+				</if>
+
+			</trim>
+		</where>
+	</select>
+
+	<select id="queryMessageCount"   resultType="java.lang.Integer" parameterType="org.spring.springboot.domain.LeinuoMessageDTO">
+		select
+		   count(1)
+		from tbl_leinuo_message
+		<where>
+			<trim>
+				<if test="isRead != null and isRead != ''">
+					AND isRead  = #{isRead}
+				</if>
+				<if test="userID != null and userID != ''">
+					AND userID = #{userID}
+				</if>
+
+			</trim>
+		</where>
+	</select>
+
+
+
+	<insert id="addMessageByUser" parameterType="org.spring.springboot.domain.LeinuoMessageDTO" >
+		<foreach collection="list" item="item" index="index" separator=";" open="" close=";">
+			insert into tbl_leinuo_message(
+			<if test="item.userID != null  ">userID,</if>
+			<if test="item.messageContent != null  ">messageContent,</if>
+			<if test="item.messageTitle != null  ">messageTitle,</if>
+			<if test="item.documentID != null  ">documentID,</if>
+			<if test="item.isRead != null  ">isRead,</if>
+			actionTime,createTime)
+			values(
+			<if test="item.userID != null  ">#{item.userID},</if>
+			<if test="item.messageContent != null  ">#{item.messageContent},</if>
+			<if test="item.messageTitle != null  ">#{item.messageTitle},</if>
+			<if test="item.documentID != null  ">#{item.documentID},</if>
+			<if test="item.isRead != null  ">#{item.isRead},</if>
+			date_format( now() ,'%Y%m%d%H%i%s'),
+			date_format( now() ,'%Y%m%d%H%i%s')
+			)
+		</foreach>
+	</insert>
+
+
+	<!--删除订单关联-->
+	<delete id="deleteMessageByIDs" parameterType="java.util.Map">
+		DELETE 	 FROM tbl_leinuo_message WHERE   id IN (${ids})
+	</delete>
+
+
+</mapper>
