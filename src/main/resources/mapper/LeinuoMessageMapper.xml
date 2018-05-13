@@ -69,4 +69,13 @@
 	</delete>
 
 
+
+
+	<select id="queryMessageByID"  resultType="org.spring.springboot.domain.LeinuoMessageDTO" parameterType="org.spring.springboot.domain.LeinuoMessageDTO">
+		select
+		<include refid="Base_Column_List" />
+		from tbl_leinuo_message where id = #{id}
+	</select>
+
+
 </mapper>

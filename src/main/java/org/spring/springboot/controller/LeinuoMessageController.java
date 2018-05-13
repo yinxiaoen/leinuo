@@ -51,4 +51,11 @@ public class LeinuoMessageController {
         return new Result("0", "");
     }
 
+
+    @RequestMapping(value = "/queryMessageByID", method = RequestMethod.GET)
+    public Object queryMessageCounts(Long id) {
+        LeinuoMessageDTO leinuoMessageDTO =  messageService.queryMessageByID(id);
+        return new Result("0", leinuoMessageDTO);
+    }
+
 }

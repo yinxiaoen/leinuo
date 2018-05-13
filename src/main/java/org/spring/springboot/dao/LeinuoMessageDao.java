@@ -19,4 +19,6 @@ public interface LeinuoMessageDao {
 
     void deleteMessageByIDs(@Param("ids") String ids);
 
+    LeinuoMessageDTO  queryMessageByID(Long id);
+
 }

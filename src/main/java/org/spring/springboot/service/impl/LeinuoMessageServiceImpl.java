@@ -33,4 +33,9 @@ public class LeinuoMessageServiceImpl implements LeinuoMessageService {
     public void deleteMessageByIDs(@Param("ids") String ids) {
         leinuoMessageDao.deleteMessageByIDs(ids);
     }
+
+    @Override
+    public LeinuoMessageDTO queryMessageByID(Long id) {
+        return leinuoMessageDao.queryMessageByID(id);
+    }
 }
