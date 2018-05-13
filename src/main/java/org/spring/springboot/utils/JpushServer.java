@@ -46,7 +46,7 @@ public class JpushServer {
     public static PushPayload buildPushObject_android_ios_alias_alert(String alias, String alert){
         return PushPayload.newBuilder()
                 .setPlatform(Platform.android_ios())
-                .setAudience(alias.equals("") ? Audience.all():Audience.alias(alias))
+                .setAudience(!CommonUtils.isBlank(alias) ? Audience.all():Audience.alias(alias))
                 .setNotification(Notification.newBuilder()
                         .addPlatformNotification(AndroidNotification.newBuilder()
                                 .addExtra("type", "infomation")
@@ -59,7 +59,7 @@ public class JpushServer {
                         .build())
                 .setOptions(Options.newBuilder()
                         .setApnsProduction(true)//true-推送生产环境 false-推送开发环境（测试使用参数）
-                        .setTimeToLive(90)//消息在JPush服务器的失效时间（测试使用参数）
+                        .setTimeToLive(40)//消息在JPush服务器的失效时间（测试使用参数）
                         .build())
                 .build();
     }
@@ -74,7 +74,8 @@ public class JpushServer {
         JPushClient jpushClient = new JPushClient(masterSecret, appKey, null, clientConfig);
         PushPayload payload = buildPushObject_android_ios_alias_alert(alias,alert);
         try {
-            return jpushClient.sendPush(payload);
+            PushResult result =  jpushClient.sendPush(payload);
+            return result;
         } catch (APIConnectionException e) {
             log.error("Connection error. Should retry later. ", e);
             return null;
@@ -85,6 +86,11 @@ public class JpushServer {
             log.info("Error Message: " + e.getErrorMessage());
             log.info("Msg ID: " + e.getMsgId());
             return null;
+        }finally {
+            jpushClient.close();
         }
+
+
+
     }
 }
