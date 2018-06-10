@@ -24,4 +24,9 @@ public class LawBookServiceImpl implements LawBookService {
     public List<LawBookDTO> readBookTitle(LawBookDTO lawBookDTO) {
         return lawBookDao.readBookTitle(lawBookDTO);
     }
+
+    @Override
+    public void insertLawBook(LawBookDTO lawBookDTO) {
+        lawBookDao.insertLawBook(lawBookDTO);
+    }
 }

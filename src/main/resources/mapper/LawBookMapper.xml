@@ -27,6 +27,7 @@
 			        and action !=2
 			</trim>
 		</where>
+		group by pageNo
 		ORDER  BY  createTime DESC
 	</select>
 
@@ -35,8 +36,25 @@
 	<select id="readBookTitle"  resultType="org.spring.springboot.domain.LawBookDTO" parameterType="org.spring.springboot.domain.LawBookDTO">
 		select
 		<include refid="Base_Column_List" />
-		from tbl_leinuo_lawbook group by title 	ORDER  BY  id asc;
+		from tbl_leinuo_lawbook where title LIKE '%${title}%' 	ORDER  BY  id asc;
 	</select>
 
+
+
+	<insert id="insertLawBook" parameterType="org.spring.springboot.domain.LawBookDTO" >
+		insert into tbl_leinuo_lawbook(
+		<if test="title != null  ">title,</if>
+		<if test="bookUrl != null  ">bookUrl,</if>
+		<if test="pageNo != null  ">pageNo,</if>
+		action,
+		actionTime,createTime)
+		values(
+		<if test="title != null  ">#{title},</if>
+		<if test="bookUrl != null  ">#{bookUrl},</if>
+		<if test="pageNo != null  ">#{pageNo},</if>
+		0,
+		date_format( now() ,'%Y%m%d%H%i%s'),
+		date_format( now() ,'%Y%m%d%H%i%s'))
+	</insert>
 
 </mapper>

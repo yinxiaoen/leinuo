@@ -1,11 +1,11 @@
 package org.spring.springboot.controller;
-
-
 import org.apache.poi.xwpf.converter.core.BasicURIResolver;
 import org.apache.poi.xwpf.converter.core.FileImageExtractor;
 import org.apache.poi.xwpf.converter.xhtml.XHTMLConverter;
 import org.apache.poi.xwpf.converter.xhtml.XHTMLOptions;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.spring.springboot.common.Result;
 import org.spring.springboot.config.ConfigBean;
 import org.spring.springboot.config.image.ImageProperties;
@@ -13,19 +13,21 @@ import org.spring.springboot.domain.DocumentUpLoadDTO;
 import org.spring.springboot.domain.ProjectDocument;
 import org.spring.springboot.domain.image.HttpResponseBean;
 import org.spring.springboot.service.ProjectDocumentService;
+import org.spring.springboot.utils.CommonUtils;
+import org.spring.springboot.utils.HtmlUtil;
+import org.spring.springboot.utils.Md5tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.*;
-
-import java.math.BigDecimal;
-import java.text.NumberFormat;
+import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
-
 /**
  * Created by yinxiaoen on 2018/3/22.
  */
@@ -41,7 +43,31 @@ public class ProjectDocumentController {
     private ImageProperties imageProperties;
     @RequestMapping(value = "/document/queryProjectAndDocument", method = RequestMethod.POST)
     public Object findOneCity(@RequestBody ProjectDocument paramDTO) {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat sdfTime = new SimpleDateFormat("yyyyMMdd");
+        try {
+        if(CommonUtils.isBlank(paramDTO.getStartDate())){
+
+            String start = "";
+            start = sdfTime.format(format.parse(paramDTO.getStartDate()));
+            paramDTO.setStartDate(start);
+        }
+        if(CommonUtils.isBlank(paramDTO.getEndDate())){
+            String end = sdfTime.format(format.parse(paramDTO.getEndDate()));
+            paramDTO.setEndDate(end);
+        }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         List<ProjectDocument> list =  projectDocumentService.findAllDocumentAndProject(paramDTO);
+        list.forEach(e->{
+            try {
+                String time = format.format(sdfTime.parse(String.valueOf(e.getFinishDate())));
+                e.setFormatFinishDate(time);
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+            }
+        });
         return new Result("0", list);
     }
 
@@ -111,9 +137,10 @@ public class ProjectDocumentController {
         String htmlPath = "";
         String documentRealName = "";
         try {
-            path = config.getTbl_surf_glb_mul_file_path() + file.getOriginalFilename();
+            String fileName = Md5tools.MD5(file.getOriginalFilename());
+            path = config.getTbl_surf_glb_mul_file_path() +fileName+".docx";
             file.transferTo(new File(path));
-            htmlPath = word2007ToHtml(new File(path));
+            htmlPath = word2007ToHtmlTest(new File(path));
             documentRealName = file.getOriginalFilename();
         } catch (IOException e) {
             return new Result("001", e.getMessage());
@@ -125,6 +152,14 @@ public class ProjectDocumentController {
         documentUpLoadDTO.setHtmlPath(htmlPath);
         documentUpLoadDTO.setDocumentRealName(documentRealName);
         return new Result("0", documentUpLoadDTO);
+    }
+
+    @RequestMapping(value = "/document/getProjectDocumentByID", method = RequestMethod.GET)
+    public Object getProjectDocumentByID(Integer id) {
+        ProjectDocument paramDTO = new ProjectDocument();
+        paramDTO.setId(id);
+        List<ProjectDocument> list =  projectDocumentService.findAllDocumentAndProject(paramDTO);
+        return new Result("0", list);
     }
 
 
@@ -209,13 +244,64 @@ public class ProjectDocumentController {
                 outputStreamWriter.close();
             }
         }
-        return config.getTbl_surf_html()+htmlName;
+        return config.getTbl_surf_html()+"/"+htmlName;
+    }
+
+
+    public String word2007ToHtmlTest(File file) throws Exception {
+        String htmlName = + Calendar.getInstance().getTimeInMillis()+".html";
+        String targetFileName = config.getTbl_surf_glb_mul_file_path()+ htmlName;
+        String imagePathStr = config.getTbl_surf_glb_mul_file_path()+"/image/";
+        OutputStreamWriter outputStreamWriter = null;
+        try {
+            XWPFDocument document = new XWPFDocument(new FileInputStream(file));
+            XHTMLOptions options = XHTMLOptions.create();
+            // 存放图片的文件夹
+            options.setExtractor(new FileImageExtractor(new File(imagePathStr)));
+            // html中图片的路径
+            options.URIResolver(new BasicURIResolver("image"));
+            outputStreamWriter = new OutputStreamWriter(new FileOutputStream(targetFileName), "utf-8");
+            XHTMLConverter xhtmlConverter = (XHTMLConverter) XHTMLConverter.getInstance();
+            xhtmlConverter.convert(document, outputStreamWriter, options);
+        } finally {
+            if (outputStreamWriter != null) {
+                outputStreamWriter.close();
+            }
+        }
+        String htmlName2= + Calendar.getInstance().getTimeInMillis()+".html";
+        HtmlUtil.replaceHtml(targetFileName,config.getTbl_surf_glb_mul_file_path()+"/"+htmlName2,HtmlUtil.returnJS());
+        return config.getTbl_surf_html()+"/"+htmlName2;
+    }
+
+    /**
+     * 设置页面大小及纸张方向 landscape横向
+     * @param document
+     * https://www.cnblogs.com/unruly/p/7552998.html
+     * STPageOrientation.Enum stValue
+     */
+    public void setDocumentSize(XWPFDocument document) {
+        CTSectPr sectPr = document.getDocument().getBody().addNewSectPr();
+        CTPageSz pgsz = sectPr.isSetPgSz() ? sectPr.getPgSz() : sectPr.addNewPgSz();
+        pgsz.setW(new BigInteger("100%"));
+        //pgsz.setOrient(stValue);
     }
 
     public static String getExtention(String fileName) {
         int pos = fileName.lastIndexOf(".");
         return fileName.substring(pos + 1);
     }
+
+    //1代表编码   2代表 项目名称  3 代表挂牌下个   4代表 截至日期  5 代表 项目状态
+    @RequestMapping(value = "/document/getDocumentTitle", method = RequestMethod.POST)
+    public Object queryTableList(@RequestBody ProjectDocument paramDTO) {
+        List<String> list = new LinkedList();
+        list.add("2");
+        list.add("3");
+        list.add("4");
+        return new Result("0", list);
+    }
+
+
 
 
 

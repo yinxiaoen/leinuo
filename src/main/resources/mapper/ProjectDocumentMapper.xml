@@ -64,6 +64,12 @@
 				<if test="categoryIDs != null  and categoryIDs != ''">
 					AND categoryID in    (${categoryIDs})
 				</if>
+				<if test="startDate != null and startDate != ''">
+					AND finishDate <![CDATA[>=]]>#{startDate}
+				</if>
+				<if test="endDate != null and endDate != ''">
+					AND finishDate <![CDATA[<=]]>#{endDate}
+				</if>
 			        and action !=2
 			</trim>
 		</where>

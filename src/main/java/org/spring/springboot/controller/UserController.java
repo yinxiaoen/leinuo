@@ -3,6 +3,7 @@ package org.spring.springboot.controller;
 import org.spring.springboot.common.Result;
 import org.spring.springboot.config.sms.SmsProperties;
 import org.spring.springboot.dao.RedisDao;
+import org.spring.springboot.domain.ProjectDocument;
 import org.spring.springboot.domain.UserDTO;
 import org.spring.springboot.service.UserService;
 import org.spring.springboot.utils.CommonUtils;
@@ -13,7 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -161,6 +165,30 @@ public class UserController {
     }
 
 
+    @RequestMapping(value = "/user/queryUserList", method = RequestMethod.POST)
+    public Object queryUserDTO(@RequestBody UserDTO userDTO) {
+        try {
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            DateFormat sdfTime = new SimpleDateFormat("yyyyMMddhhmmss");
+            List<UserDTO> list = userService.queryUserList(userDTO);
+            list.forEach(e->{
+                try {
+                    String time = format.format(sdfTime.parse(String.valueOf(e.getCreateTime())));
+                    e.setTimeFormat(time);
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
+            });
+            return new Result("0", list);
+        } catch (Exception e) {
+            // 网络IO错误
+            e.printStackTrace();
+            return new Result("01", "查询失败");
+        }
+    }
+
+/*
+
     public static void mainTest(){
         BigDecimal big = new BigDecimal(2.1430000);
         NumberFormat nf = NumberFormat.getInstance();
@@ -168,6 +196,7 @@ public class UserController {
         System.out.println(nf.format(big));
 
     }
+*/
 
 
 

@@ -38,4 +38,9 @@ public class LeinuoMessageServiceImpl implements LeinuoMessageService {
     public LeinuoMessageDTO queryMessageByID(Long id) {
         return leinuoMessageDao.queryMessageByID(id);
     }
+
+    @Override
+    public void updateMessage(LeinuoMessageDTO leinuoMessageDTO) {
+        leinuoMessageDao.updateMessage(leinuoMessageDTO);
+    }
 }

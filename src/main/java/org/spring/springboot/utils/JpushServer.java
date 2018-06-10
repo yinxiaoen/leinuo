@@ -46,7 +46,7 @@ public class JpushServer {
     public static PushPayload buildPushObject_android_ios_alias_alert(String alias, String alert){
         return PushPayload.newBuilder()
                 .setPlatform(Platform.android_ios())
-                .setAudience(!CommonUtils.isBlank(alias) ? Audience.all():Audience.alias(alias))
+                .setAudience(Audience.all())
                 .setNotification(Notification.newBuilder()
                         .addPlatformNotification(AndroidNotification.newBuilder()
                                 .addExtra("type", "infomation")

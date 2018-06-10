@@ -19,4 +19,6 @@ public class DocumentUserRelationDTO {
     private String taxPrice;
     private Long finishDate;
     private Long id;
+    private Long actionTime;
+    private String actionTimeFormat;
 }

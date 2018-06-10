@@ -20,6 +20,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.Map;
+import java.util.StringJoiner;
 
 /**
  * Created by Administrator on 2018/4/10.
@@ -111,5 +112,10 @@ public class HttpUtil {
             throw new RuntimeException(ex);
         }
     }
+
+
+
+
+
 
 }

@@ -16,4 +16,5 @@ public interface UserService {
     List<UserDTO> webchatQuery(UserDTO userDTO);
     void updateUserInformation(UserDTO userDTO);
     List<UserDTO> queryUserByTel(UserDTO userDTO);
+    List<UserDTO> queryUserList(UserDTO userDTO);
 }

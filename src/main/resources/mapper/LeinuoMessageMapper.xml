@@ -11,7 +11,7 @@
 		from tbl_leinuo_message
 		<where>
 		     <trim>
-				<if test="isRead != null and isRead != ''">
+				<if test="isRead != null ">
 					AND isRead  = #{isRead}
 				</if>
 				<if test="userID != null and userID != ''">
@@ -28,7 +28,7 @@
 		from tbl_leinuo_message
 		<where>
 			<trim>
-				<if test="isRead != null and isRead != ''">
+				<if test="isRead != null ">
 					AND isRead  = #{isRead}
 				</if>
 				<if test="userID != null and userID != ''">
@@ -39,6 +39,12 @@
 		</where>
 	</select>
 
+	<!-- 修改记录，只修改只不为空的字段 -->
+	<update id="updateMessage" parameterType="org.spring.springboot.domain.LeinuoMessageDTO" >
+		UPDATE tbl_leinuo_message SET isRead  = #{isRead}
+
+		WHERE id = #{id} AND userID = #{userID}
+	</update>
 
 
 	<insert id="addMessageByUser" parameterType="org.spring.springboot.domain.LeinuoMessageDTO" >

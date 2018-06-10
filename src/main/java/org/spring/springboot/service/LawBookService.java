@@ -11,4 +11,7 @@ public interface LawBookService {
     List<LawBookDTO> readBookList(LawBookDTO lawBookDTO);
 
     List<LawBookDTO> readBookTitle(LawBookDTO lawBookDTO);
+
+    void insertLawBook(LawBookDTO lawBookDTO);
+
 }

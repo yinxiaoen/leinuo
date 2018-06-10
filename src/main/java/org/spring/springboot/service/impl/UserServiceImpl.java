@@ -50,4 +50,9 @@ public class UserServiceImpl implements UserService {
     public List<UserDTO> queryUserByTel(UserDTO userDTO) {
         return userDao.queryUserByTel(userDTO);
     }
+
+    @Override
+    public List<UserDTO> queryUserList(UserDTO userDTO) {
+        return userDao.queryUserList(userDTO);
+    }
 }

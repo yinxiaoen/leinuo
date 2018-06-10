@@ -31,4 +31,7 @@ public class ProjectDocument {
     private String imagePath;
     private String htmlPath;
     private String  categoryIDs;
+    private String startDate;
+    private String endDate;
+    private String formatFinishDate;
 }

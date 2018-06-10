@@ -129,4 +129,19 @@
 	</update>
 
 
+	<select id="queryUserList" parameterType="java.util.Map" resultType="org.spring.springboot.domain.UserDTO">
+		select <include refid="Base_Column_List" />
+		from tbl_leinuo_user
+		<where>
+			<trim prefixOverrides="and">
+				<if test="userName != null and userName != ''">
+					AND userName LIKE '%${userName}%'
+				</if>
+
+			</trim>
+		</where>
+		ORDER  BY  createTime DESC
+	</select>
+
+
 </mapper>

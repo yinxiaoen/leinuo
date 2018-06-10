@@ -21,4 +21,7 @@ public interface LeinuoMessageDao {
 
     LeinuoMessageDTO  queryMessageByID(Long id);
 
+
+    void updateMessage(LeinuoMessageDTO leinuoMessageDTO);
+
 }

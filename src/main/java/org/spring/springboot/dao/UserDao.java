@@ -19,4 +19,6 @@ public interface UserDao {
     UserDTO queryUserById(@Param("id") Long id);
     void deleteUserByOpenID(@Param("openid") String openid);
     void updateUserInformation(UserDTO userDTO);
+
+    List<UserDTO> queryUserList(UserDTO userDTO);
 }

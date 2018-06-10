@@ -58,4 +58,11 @@ public class LeinuoMessageController {
         return new Result("0", leinuoMessageDTO);
     }
 
+
+    @RequestMapping(value = "/updateMessage", method = RequestMethod.POST)
+    public Object updateMessage(@RequestBody LeinuoMessageDTO leinuoMessageDTO) {
+        messageService.updateMessage(leinuoMessageDTO);
+        return new Result("0", "");
+    }
+
 }

@@ -23,4 +23,5 @@ public class UserDTO {
     private String token;
     private String smsCode;
     private String email = "";
+    private String timeFormat;
 }
