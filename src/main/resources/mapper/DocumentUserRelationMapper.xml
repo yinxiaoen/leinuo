@@ -17,10 +17,10 @@
 				<if test="userID != null and userID != ''">
 					AND  r.userID = #{userID}
 				</if>
-				<if test="isAttention != null and isAttention != ''">
+				<if test="isAttention != null ">
 					AND  r.isAttention = #{isAttention}
 				</if>
-				<if test="isRead != null and isRead != ''">
+				<if test="isRead != null ">
 					AND  r.isRead  = #{isRead}
 				</if>
 				<if test="documentID != null and documentID != ''">
@@ -57,10 +57,10 @@
 			<if test="userID != null and userID != '' ">
 				userID=#{userID},
 			</if>
-			<if test="isRead != null and isRead != '' ">
+			<if test="isRead != null  ">
 				isRead=#{isRead},
 			</if>
-			<if test="isAttention != null and isAttention != '' ">
+			<if test="isAttention != null ">
 				isAttention=#{isAttention},
 			</if>
 			actionTime = date_format( now() ,'%Y%m%d%H%i%s')

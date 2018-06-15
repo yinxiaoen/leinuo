@@ -15,5 +15,7 @@ public interface ProjectDocumentDao {
 
    void updateDocumentAndProject(ProjectDocument document);
 
-   void deleteDocumentAndProject(@Param("ids") String ids);
+   void deleteDocumentAndProject(@Param("ids") String ids,@Param("htmlPath") String htmlPath);
+
+   ProjectDocument  queryDocmentByID(Integer id);
 }

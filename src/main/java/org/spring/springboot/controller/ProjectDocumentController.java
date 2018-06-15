@@ -9,6 +9,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.spring.springboot.common.Result;
 import org.spring.springboot.config.ConfigBean;
 import org.spring.springboot.config.image.ImageProperties;
+import org.spring.springboot.domain.AppEdition;
 import org.spring.springboot.domain.DocumentUpLoadDTO;
 import org.spring.springboot.domain.ProjectDocument;
 import org.spring.springboot.domain.image.HttpResponseBean;
@@ -25,6 +26,7 @@ import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
@@ -88,7 +90,22 @@ public class ProjectDocumentController {
 
     @RequestMapping(value = "/document/deleteDocument", method = RequestMethod.GET)
     public Object updateDocument(String ids) {
-        projectDocumentService.deleteDocumentAndProject(ids);
+        String[] idArray = ids.split(",");
+
+        for(String id :idArray){
+            ProjectDocument  doc = projectDocumentService.queryDocmentByID(Integer.valueOf(id));
+            String htmlPath = "";
+            if(CommonUtils.isBlank(doc.getHtmlPath())  && doc.getHtmlPath().indexOf(".html")!=-1){
+                try {
+                    htmlPath = word2007ToHtmlTest(new File(doc.getDocumentPath()),2);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            projectDocumentService.deleteDocumentAndProject(id,htmlPath);
+
+        }
+
         return new Result("0", "");
     }
 
@@ -124,6 +141,50 @@ public class ProjectDocumentController {
 
 
 
+    @RequestMapping(value = "/appDownLoad", method = RequestMethod.GET)
+    public HttpServletResponse download(HttpServletResponse response) {
+        try {
+            String appPath = config.getAppPath();
+            // path是指欲下载的文件的路径。
+            File file = new File(appPath);
+            // 取得文件名。
+            String filename = file.getName();
+            // 以流的形式下载文件。
+            InputStream fis = new BufferedInputStream(new FileInputStream(appPath));
+            byte[] buffer = new byte[fis.available()];
+            fis.read(buffer);
+            fis.close();
+            // 清空response
+            response.reset();
+            // 设置response的Header
+            response.addHeader("Content-Disposition", "attachment;filename=" + new String(filename.getBytes()));
+            response.addHeader("Content-Length", "" + file.length());
+            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
+            response.setContentType("application/octet-stream");
+            toClient.write(buffer);
+            toClient.flush();
+            toClient.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return response;
+    }
+
+
+    @RequestMapping(value = "/appNeedUpLoad", method = RequestMethod.GET)
+    public Object appNeedUpLoad() {
+        String appPath = config.getAppPath();
+        String appEdition = "1.0.1";
+        String reason = "更改了一些bug";
+        AppEdition edition = new AppEdition();
+        edition.setAppDownLoadPath(appPath);
+        edition.setEdition(appEdition);
+        edition.setReason(reason);
+        return new Result("0", edition);
+    }
+
+
+
     @RequestMapping("/addTemplateUpLoadV2")
     @ResponseBody
     public Object addTemplateUpLoadV2(@RequestParam(value = "file", required = false) MultipartFile file)
@@ -140,7 +201,7 @@ public class ProjectDocumentController {
             String fileName = Md5tools.MD5(file.getOriginalFilename());
             path = config.getTbl_surf_glb_mul_file_path() +fileName+".docx";
             file.transferTo(new File(path));
-            htmlPath = word2007ToHtmlTest(new File(path));
+            htmlPath = word2007ToHtmlTest(new File(path),1);
             documentRealName = file.getOriginalFilename();
         } catch (IOException e) {
             return new Result("001", e.getMessage());
@@ -158,8 +219,12 @@ public class ProjectDocumentController {
     public Object getProjectDocumentByID(Integer id) {
         ProjectDocument paramDTO = new ProjectDocument();
         paramDTO.setId(id);
-        List<ProjectDocument> list =  projectDocumentService.findAllDocumentAndProject(paramDTO);
-        return new Result("0", list);
+        ProjectDocument document =  projectDocumentService.queryDocmentByID(paramDTO.getId());
+        List<ProjectDocument> doclist = new ArrayList();
+        if(document!=null){
+            doclist.add(document);
+        }
+        return new Result("0", doclist);
     }
 
 
@@ -248,7 +313,7 @@ public class ProjectDocumentController {
     }
 
 
-    public String word2007ToHtmlTest(File file) throws Exception {
+    public String word2007ToHtmlTest(File file,Integer type) throws Exception {
         String htmlName = + Calendar.getInstance().getTimeInMillis()+".html";
         String targetFileName = config.getTbl_surf_glb_mul_file_path()+ htmlName;
         String imagePathStr = config.getTbl_surf_glb_mul_file_path()+"/image/";
@@ -268,8 +333,14 @@ public class ProjectDocumentController {
                 outputStreamWriter.close();
             }
         }
-        String htmlName2= + Calendar.getInstance().getTimeInMillis()+".html";
-        HtmlUtil.replaceHtml(targetFileName,config.getTbl_surf_glb_mul_file_path()+"/"+htmlName2,HtmlUtil.returnJS());
+        String htmlName2 = "";
+        if(type == 1){
+            htmlName2= + Calendar.getInstance().getTimeInMillis()+".html";
+            HtmlUtil.replaceHtml(targetFileName,config.getTbl_surf_glb_mul_file_path()+"/"+htmlName2,HtmlUtil.returnJS());
+        }else{
+            htmlName2= + Calendar.getInstance().getTimeInMillis()+".html";
+            HtmlUtil.replaceHtml(targetFileName,config.getTbl_surf_glb_mul_file_path()+"/"+htmlName2,HtmlUtil.returnDOCDownJS());
+        }
         return config.getTbl_surf_html()+"/"+htmlName2;
     }
 

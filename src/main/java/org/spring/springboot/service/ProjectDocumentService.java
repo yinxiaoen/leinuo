@@ -15,5 +15,7 @@ public interface ProjectDocumentService {
     void updateDocumentAndProject(ProjectDocument document);
 
 
-    void deleteDocumentAndProject( String ids);
+    void deleteDocumentAndProject( String ids,String htmlPath);
+
+    ProjectDocument  queryDocmentByID(Integer id);
 }

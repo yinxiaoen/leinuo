@@ -32,11 +32,14 @@ public class ProjectDocumentServiceImpl implements ProjectDocumentService{
     }
 
     @Override
-    public void deleteDocumentAndProject(String ids) {
-        projectDocumentDao.deleteDocumentAndProject(ids);
+    public void deleteDocumentAndProject(String ids,String htmlPath) {
+        projectDocumentDao.deleteDocumentAndProject(ids,htmlPath);
     }
 
-
+    @Override
+    public ProjectDocument queryDocmentByID(Integer id) {
+        return projectDocumentDao.queryDocmentByID(id);
+    }
 
 
     private void printProjectDocument(ProjectDocument document){

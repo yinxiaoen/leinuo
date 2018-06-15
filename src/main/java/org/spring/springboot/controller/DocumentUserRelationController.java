@@ -55,7 +55,8 @@ public class DocumentUserRelationController {
         if(CommonUtils.isEmpty(list)){
             documentUserRelationService.insertDocumentUserRelation(paramDTO);
         }else{
-            documentUserRelationService.updateDocumentUserRelation(list.get(0));
+            paramDTO.setId(list.get(0).getId());
+            documentUserRelationService.updateDocumentUserRelation(paramDTO);
         }
         return new Result("0", "");
     }

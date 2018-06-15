@@ -18,4 +18,6 @@ public class ConfigBean {
     private String headImage;
     @Value("${tbl_surf_real_image}")
     private String realImage;
+    @Value("${tbl_app_path}")
+    private String appPath;
 }

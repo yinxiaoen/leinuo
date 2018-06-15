@@ -20,6 +20,25 @@ public class HtmlUtil {
         return join.toString();
     }
 
+
+    public static String returnDOCDownJS() {
+        StringJoiner join = new StringJoiner("");
+        join.add("<img src=\"http://39.107.247.32:8081/headerImage/yixiajia.png\" alt=\"头像\" width=\"250\" height=\"100\" class=\"preview\" title=\"xiajia\"/>");
+        join.add("<style type=\"text/css\"> ");
+        join.add(".preview {position:relative; left:50%; top:-100%; width:300px; height:200px; margin-left:-150px; margin-top:-90%; background-color:#f00} ");
+        join.add("</style>");
+        join.add("<script type=\"text/javascript\">");
+        join.add("(function() {");
+        join.add("document.getElementsByTagName(\"table\")[0].style.width = \"100%\";");
+        join.add("document.getElementsByTagName(\"div\")[0].style.width = \"100%\";");
+        join.add("document.getElementsByTagName(\"div\")[0].style.margin=\"0\";");
+        join.add("})()");
+        join.add("</script>");
+        join.add("</html>");
+        return join.toString();
+    }
+
+
     public static void replaceHtml(String path, String path1, String newContent) {
         try {
             FileReader fr = new FileReader(path);

@@ -76,7 +76,12 @@
 		ORDER  BY  createTime DESC
 	</select>
 
-
+	<select id="queryDocmentByID"  resultType="org.spring.springboot.domain.ProjectDocument" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from tbl_leinuo_document
+	    where id = #{id}
+	</select>
 
 
 	<insert id="insertDocumentAndProject" parameterType="org.spring.springboot.domain.ProjectDocument" >
@@ -187,10 +192,20 @@
 		WHERE id = #{id}
 	</update>
 
-	<!-- 删除记录 -->
-	<delete id="deleteDocumentAndProject" parameterType="java.util.Map">
-		DELETE 	 FROM tbl_leinuo_document WHERE id IN (${ids})
-	</delete>
+
+
+
+	<update id="deleteDocumentAndProject"  parameterType="java.util.Map" >
+		UPDATE tbl_leinuo_document SET  action = 2,
+		<trim  suffixOverrides="," >
+
+			<if test="htmlPath != null and htmlPath != '' ">
+				htmlPath=#{htmlPath},
+			</if>
+			actionTime = date_format( now() ,'%Y%m%d%H%i%s')
+		</trim>
+		WHERE id in (${ids})
+	</update>
 
 
 
