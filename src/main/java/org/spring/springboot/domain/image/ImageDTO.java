@@ -9,4 +9,5 @@ import lombok.Data;
 public class ImageDTO {
     private String imageStr;
     private  String fileName;
+    private String baseCode;
 }

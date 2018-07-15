@@ -1,6 +1,9 @@
 package org.spring.springboot.controller;
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.converter.WordToHtmlConverter;
 import org.apache.poi.xwpf.converter.core.BasicURIResolver;
 import org.apache.poi.xwpf.converter.core.FileImageExtractor;
+import org.apache.poi.xwpf.converter.core.FileURIResolver;
 import org.apache.poi.xwpf.converter.xhtml.XHTMLConverter;
 import org.apache.poi.xwpf.converter.xhtml.XHTMLOptions;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -13,14 +16,25 @@ import org.spring.springboot.domain.AppEdition;
 import org.spring.springboot.domain.DocumentUpLoadDTO;
 import org.spring.springboot.domain.ProjectDocument;
 import org.spring.springboot.domain.image.HttpResponseBean;
+import org.spring.springboot.domain.image.ImageDTO;
 import org.spring.springboot.service.ProjectDocumentService;
 import org.spring.springboot.utils.CommonUtils;
 import org.spring.springboot.utils.HtmlUtil;
 import org.spring.springboot.utils.Md5tools;
+import org.spring.springboot.utils.ToolsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.w3c.dom.Document;
+import sun.misc.BASE64Decoder;
+
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.math.BigInteger;
 import java.text.DateFormat;
@@ -174,7 +188,7 @@ public class ProjectDocumentController {
     @RequestMapping(value = "/appNeedUpLoad", method = RequestMethod.GET)
     public Object appNeedUpLoad() {
         String appPath = config.getAppPath();
-        String appEdition = "1.0.1";
+        String appEdition = "1.0.3";
         String reason = "更改了一些bug";
         AppEdition edition = new AppEdition();
         edition.setAppDownLoadPath(appPath);
@@ -253,6 +267,18 @@ public class ProjectDocumentController {
 
 
 
+    @RequestMapping("/document/upLoadHeadImageByBase64")
+    @ResponseBody
+    public Object addTemplateUpLoadHeadImage(@RequestBody ImageDTO baseCode)
+    {
+        String imageName = ToolsUtils.getRandomString(4);
+        String path = config.getHeadImage() + imageName;
+        generateImage(baseCode.getBaseCode(),path);
+        String realPath = config.getTbl_surf_html()+config.getRealImage()+ imageName;
+        return new Result("0", realPath);
+    }
+
+
 
     /**
      * 上传多个文件
@@ -287,7 +313,7 @@ public class ProjectDocumentController {
         httpResponseBean.setSuccess("true");
         return new Result("0", httpResponseBean);
 
-}
+    }
 
     public String word2007ToHtml(File file) throws Exception {
         String htmlName = + Calendar.getInstance().getTimeInMillis()+".html";
@@ -328,10 +354,17 @@ public class ProjectDocumentController {
             outputStreamWriter = new OutputStreamWriter(new FileOutputStream(targetFileName), "utf-8");
             XHTMLConverter xhtmlConverter = (XHTMLConverter) XHTMLConverter.getInstance();
             xhtmlConverter.convert(document, outputStreamWriter, options);
-        } finally {
-            if (outputStreamWriter != null) {
-                outputStreamWriter.close();
+        } catch(Exception e){
+           throw new Exception(e);
+        } finally{
+            try {
+                if (outputStreamWriter != null) {
+                    outputStreamWriter.close();
+                }
+            }catch(Exception e){
+                System.out.println("---2-------->"+e.getMessage());
             }
+
         }
         String htmlName2 = "";
         if(type == 1){
@@ -374,7 +407,143 @@ public class ProjectDocumentController {
 
 
 
+    /**
+     * base64字符串转化成图片
+     * @param imgStr
+     * @param path
+     * @return
+     */
+    public static boolean generateImage(String imgStr,String path)
+    {   //对字节数组字符串进行Base64解码并生成图片
+        if (imgStr == null) //图像数据为空
+            return false;
+        BASE64Decoder decoder = new BASE64Decoder();
+        try
+        {
+            //Base64解码
+            byte[] b = decoder.decodeBuffer(imgStr);
+            for(int i=0;i<b.length;++i)
+            {
+                if(b[i]<0)
+                {//调整异常数据
+                    b[i]+=256;
+                }
+            }
+            //生成jpeg图片
+            String imgFilePath = path;//新生成的图片
+            OutputStream out = new FileOutputStream(imgFilePath);
+            out.write(b);
+            out.flush();
+            out.close();
+            return true;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+    }
 
+    public static void main(String[] args){
+        String str = "我是一个中国共产党员";
+        System.out.println(str.substring(0,8));
+    }
+
+
+
+
+    public String word2007ToHtmlTest2(File file,Integer type) throws Exception {
+        String htmlName = + Calendar.getInstance().getTimeInMillis()+".html";
+        String targetFileName = config.getTbl_surf_glb_mul_file_path()+ htmlName;
+        String imagePathStr = config.getTbl_surf_glb_mul_file_path()+"/image/";
+        OutputStreamWriter outputStreamWriter = null;
+        try {
+
+            if(file.getName().contains("docx")){
+                docx(file.getPath(),"",targetFileName);
+            }else{
+                doc(file.getPath(),"",targetFileName);
+            }
+          /*  XWPFDocument document = new XWPFDocument(new FileInputStream(file));
+            XHTMLOptions options = XHTMLOptions.create();
+            // 存放图片的文件夹
+            options.setExtractor(new FileImageExtractor(new File(imagePathStr)));
+            // html中图片的路径
+            options.URIResolver(new BasicURIResolver("image"));
+            outputStreamWriter = new OutputStreamWriter(new FileOutputStream(targetFileName), "utf-8");
+            XHTMLConverter xhtmlConverter = (XHTMLConverter) XHTMLConverter.getInstance();
+            xhtmlConverter.convert(document, outputStreamWriter, options);*/
+        } catch(Exception e){
+            System.out.println("-------1--------->"+e.getMessage());
+        } finally{
+            try {
+                if (outputStreamWriter != null) {
+                    outputStreamWriter.close();
+                }
+            }catch(Exception e){
+                System.out.println("---2-------->"+e.getMessage());
+            }
+
+        }
+        String htmlName2 = "";
+        if(type == 1){
+            htmlName2= + Calendar.getInstance().getTimeInMillis()+".html";
+            HtmlUtil.replaceHtml(targetFileName,config.getTbl_surf_glb_mul_file_path()+"/"+htmlName2,HtmlUtil.returnJS());
+        }else{
+            htmlName2= + Calendar.getInstance().getTimeInMillis()+".html";
+            HtmlUtil.replaceHtml(targetFileName,config.getTbl_surf_glb_mul_file_path()+"/"+htmlName2,HtmlUtil.returnDOCDownJS());
+        }
+        return config.getTbl_surf_html()+"/"+htmlName2;
+    }
+
+
+
+    public static void docx(String filePath ,String fileName,String htmlName) throws Exception{
+        final String file = filePath + fileName;
+        File f = new File(file);
+        // ) 加载word文档生成 XWPFDocument对象
+        InputStream in = new FileInputStream(f);
+        XWPFDocument document = new XWPFDocument(in);
+        // ) 解析 XHTML配置 (这里设置IURIResolver来设置图片存放的目录)
+        File imageFolderFile = new File(filePath);
+        XHTMLOptions options = XHTMLOptions.create().URIResolver(new FileURIResolver(imageFolderFile));
+        options.setExtractor(new FileImageExtractor(imageFolderFile));
+        options.setIgnoreStylesIfUnused(false);
+        options.setFragment(true);
+        // ) 将 XWPFDocument转换成XHTML
+        OutputStream out = new FileOutputStream(new File(htmlName));
+        XHTMLConverter.getInstance().convert(document, out, options);
+    }
+    /**
+     * 转换doc
+     * @param filePath
+     * @param fileName
+     * @param htmlName
+     * @throws Exception
+     */
+    public static void doc(String filePath ,String fileName,String htmlName) throws Exception{
+        final String file = filePath + fileName;
+        InputStream input = new FileInputStream(new File(file));
+        HWPFDocument wordDocument = new HWPFDocument(input);
+        WordToHtmlConverter wordToHtmlConverter = new WordToHtmlConverter(DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument());
+        //解析word文档
+        wordToHtmlConverter.processDocument(wordDocument);
+        Document htmlDocument = wordToHtmlConverter.getDocument();
+
+        File htmlFile = new File(htmlName);
+        OutputStream outStream = new FileOutputStream(htmlFile);
+
+        DOMSource domSource = new DOMSource(htmlDocument);
+        StreamResult streamResult = new StreamResult(outStream);
+
+        TransformerFactory factory = TransformerFactory.newInstance();
+        Transformer serializer = factory.newTransformer();
+        serializer.setOutputProperty(OutputKeys.ENCODING, "utf-8");
+        serializer.setOutputProperty(OutputKeys.INDENT, "yes");
+        serializer.setOutputProperty(OutputKeys.METHOD, "html");
+
+        serializer.transform(domSource, streamResult);
+        outStream.close();
+    }
 
 
 }

@@ -31,7 +31,12 @@
 		ORDER  BY  createTime DESC
 	</select>
 
+	<select id="readBookList1"  resultType="org.spring.springboot.domain.LawBookDTO" parameterType="org.spring.springboot.domain.LawBookDTO">
+		select
+		<include refid="Base_Column_List" />
+		from tbl_leinuo_lawbook
 
+	</select>
 
 	<select id="readBookTitle"  resultType="org.spring.springboot.domain.LawBookDTO" parameterType="org.spring.springboot.domain.LawBookDTO">
 		select
@@ -56,5 +61,14 @@
 		date_format( now() ,'%Y%m%d%H%i%s'),
 		date_format( now() ,'%Y%m%d%H%i%s'))
 	</insert>
+
+
+
+	<!-- 修改记录，只修改只不为空的字段 -->
+	<update id="updateLawBook" parameterType="org.spring.springboot.domain.LawBookDTO" >
+		UPDATE tbl_leinuo_lawbook SET bookUrl  = #{bookUrl}
+
+		WHERE id = #{id}
+	</update>
 
 </mapper>

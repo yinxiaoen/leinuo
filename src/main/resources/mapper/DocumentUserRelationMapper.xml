@@ -10,7 +10,7 @@
 
 	<select id="queryDocumentUserRelation"  resultType="org.spring.springboot.domain.DocumentUserRelationDTO" parameterType="org.spring.springboot.domain.DocumentUserRelationDTO">
 		select
-		r.id, r.documentID, r.userID, r.isAttention,r.isRead,r.actionTime,d.documentName,d.documentCode,d.categoryName,d.taxPrice,d.finishDate
+		r.id, r.documentID, r.userID, r.isAttention,r.isRead,r.actionTime,d.documentName,d.documentCode,d.categoryName,d.taxPrice,d.finishDate,d.categoryID
 		from tbl_leinuo_document_relation r left join tbl_leinuo_document d on  r.documentID = d.id
 		<where>
 			<trim prefixOverrides="and">

@@ -50,11 +50,23 @@ public class LawBookController {
     @RequestMapping(value = "/backAllLawBook", method = RequestMethod.GET)
     public Object backAllLawBook() {
         List<String> alllist =new ArrayList();
-        for(int i=1;i<1233;i++){
-            String url = "http://39.107.247.32:8081/html/法律法规最终版"+i+"_split.html";
+        for(int i=1;i<2231;i++){
+            String url = "http://39.107.247.32:8081/html1/法律法规最终版"+i+"_split.html";
             alllist.add(url);
         }
         return new Result("0", alllist);
+    }
+
+
+
+    @RequestMapping(value = "/readLawBookByPageNoAdmin", method = RequestMethod.POST)
+    public Object readLawBookByPageNoAdmin(@RequestBody LawBookDTO lawBookDTO) {
+        List<LawBookDTO> list =  lawBookService.readBookList1(lawBookDTO);
+        list.forEach(e->{
+            e.setBookUrl(e.getBookUrl().replace("/html/","/html1/"));
+            lawBookService.updateLawBook(e);
+        });
+        return new Result("0", "SUCCESS");
     }
 
 

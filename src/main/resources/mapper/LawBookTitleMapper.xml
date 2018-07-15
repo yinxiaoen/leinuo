@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.spring.springboot.dao.LawBookTitleDao">
+
+
+
+	<sql id="Base_Column_List">
+		id, title, parentID,createTime,actionTime,action,orderNum,contect
+	</sql>
+
+	<select id="readBookTitleList"  resultType="org.spring.springboot.domain.LawBookDTO" parameterType="org.spring.springboot.domain.LawBookDTO">
+		select
+		id, title, parentID,createTime,actionTime,action,orderNum
+		from tbl_leinuo_lawbook_title
+		<where>
+			<trim prefixOverrides="and">
+				<if test="ids != null and ids != ''">
+					AND id in (${ids})
+				</if>
+				<if test="id != null and id != ''">
+					AND id = #{id}
+				</if>
+				<if test="title != null and title != ''">
+					AND title LIKE '%${title}%'
+				</if>
+				    AND action !=2
+				  AND parentID = 0
+			</trim>
+		</where>
+		ORDER  BY  createTime DESC
+	</select>
+
+
+
+	<select id="readBookTitleByParentID"  resultType="org.spring.springboot.domain.LawBookDTO" parameterType="org.spring.springboot.domain.LawBookDTO">
+		select
+		<include refid="Base_Column_List" />
+		from tbl_leinuo_lawbook_title
+		<where>
+		<trim prefixOverrides="and">
+			<if test="title != null and title != ''">
+				AND title LIKE '%${title}%'
+			</if>
+			AND action !=2
+			AND parentID = #{id}
+		</trim>
+	</where>
+	</select>
+
+
+
+	<insert id="insertLawBookTitle" parameterType="org.spring.springboot.domain.LawBookDTO" >
+		insert into tbl_leinuo_lawbook_title(
+		<if test="title != null and title != '' ">title,</if>
+		<if test="parentID != null and parentID != '' ">parentID,</if>
+
+		<if test="contect != null and contect != '' ">contect,</if>
+		action,
+		actionTime,createTime)
+		values(
+		<if test="title != null and title != '' ">#{title},</if>
+		<if test="parentID != null and parentID != '' ">#{parentID},</if>
+
+		<if test="contect != null and contect != '' ">
+			#{contect},
+		</if>
+		0,
+		date_format( now() ,'%Y%m%d%H%i%s'),
+		date_format( now() ,'%Y%m%d%H%i%s'))
+	</insert>
+
+	<update id="updateLawBookTitle"  parameterType="org.spring.springboot.domain.LawBookDTO" >
+		UPDATE tbl_leinuo_lawbook_title SET
+		<trim  suffixOverrides="," >
+			<if test="title != null and title != '' ">
+				title = #{title},
+			</if>
+			<if test="orderNum != null and orderNum != '' ">
+				orderNum = #{orderNum},
+			</if>
+			<if test="contect != null and contect != '' ">
+				contect = #{contect},
+			</if>
+			actionTime = date_format( now() ,'%Y%m%d%H%i%s')
+		</trim>
+		WHERE id in (${id})
+	</update>
+
+
+
+	<!--&lt;!&ndash; 删除记录 &ndash;&gt;
+	<delete id="deleteLawBookTitle" parameterType="java.util.Map">
+		DELETE tbl_leinuo_lawbook_title,tbl_leinuo_lawbook_detail
+		FROM tbl_leinuo_lawbook_title
+		LEFT JOIN tbl_leinuo_lawbook_detail ON tbl_leinuo_lawbook_title.id = tbl_leinuo_lawbook_detail.titleID
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			tbl_leinuo_lawbook_title.id IN (${ids})
+		</trim>
+	</delete>-->
+
+	<!-- 删除记录 -->
+	<delete id="deleteLawBookTitle" parameterType="java.util.Map">
+		DELETE
+		FROM tbl_leinuo_lawbook_title
+
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+		    id IN (${ids})
+		</trim>
+
+	</delete>
+	<delete id="deleteLawBookTitleByParent" parameterType="java.util.Map">
+
+		DELETE
+		FROM tbl_leinuo_lawbook_title
+
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			parentID IN (${ids})
+		</trim>
+	</delete>
+
+
+	<select id="queryLawBookByID"  resultType="org.spring.springboot.domain.LawBookDTO" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from tbl_leinuo_lawbook_title
+		where id = #{id}
+	</select>
+
+</mapper>

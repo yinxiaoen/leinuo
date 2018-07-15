@@ -14,6 +14,7 @@ public class DocumentUserRelationDTO {
     private String documentName;
     private String documentCode;
     private String categoryName;
+    private Integer categoryID;
     private String projectCode;
     private String projectName;
     private String taxPrice;

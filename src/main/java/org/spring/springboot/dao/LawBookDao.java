@@ -13,7 +13,12 @@ public interface LawBookDao {
 
     List<LawBookDTO> readBookList(LawBookDTO lawBookDTO);
 
+    List<LawBookDTO> readBookList1(LawBookDTO lawBookDTO);
+
+
     List<LawBookDTO> readBookTitle(LawBookDTO lawBookDTO);
 
     void insertLawBook(LawBookDTO lawBookDTO);
+
+    void updateLawBook(LawBookDTO lawBookDTO);
 }
