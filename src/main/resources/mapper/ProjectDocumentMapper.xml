@@ -187,6 +187,9 @@
 			<if test="projectID != null and projectID != '' ">
 				projectID=#{projectID},
 			</if>
+			<if test="htmlPath != null and htmlPath != '' ">
+				htmlPath=#{htmlPath},
+			</if>
 			 actionTime = date_format( now() ,'%Y%m%d%H%i%s')
 		</trim>
 		WHERE id = #{id}

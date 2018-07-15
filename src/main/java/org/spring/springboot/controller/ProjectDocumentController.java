@@ -188,7 +188,7 @@ public class ProjectDocumentController {
     @RequestMapping(value = "/appNeedUpLoad", method = RequestMethod.GET)
     public Object appNeedUpLoad() {
         String appPath = config.getAppPath();
-        String appEdition = "1.0.3";
+        String appEdition = "1.0.4";
         String reason = "更改了一些bug";
         AppEdition edition = new AppEdition();
         edition.setAppDownLoadPath(appPath);
@@ -272,9 +272,9 @@ public class ProjectDocumentController {
     public Object addTemplateUpLoadHeadImage(@RequestBody ImageDTO baseCode)
     {
         String imageName = ToolsUtils.getRandomString(4);
-        String path = config.getHeadImage() + imageName;
+        String path = config.getHeadImage() + imageName+".jpg";
         generateImage(baseCode.getBaseCode(),path);
-        String realPath = config.getTbl_surf_html()+config.getRealImage()+ imageName;
+        String realPath = config.getTbl_surf_html()+config.getRealImage() + imageName+".jpg";
         return new Result("0", realPath);
     }
 
