@@ -104,21 +104,24 @@ public class ProjectDocumentController {
 
     @RequestMapping(value = "/document/deleteDocument", method = RequestMethod.GET)
     public Object updateDocument(String ids) {
-        String[] idArray = ids.split(",");
+/*        String[] idArray = ids.split(",");
 
         for(String id :idArray){
             ProjectDocument  doc = projectDocumentService.queryDocmentByID(Integer.valueOf(id));
             String htmlPath = "";
             if(CommonUtils.isBlank(doc.getHtmlPath())  && doc.getHtmlPath().indexOf(".html")!=-1){
                 try {
-                    htmlPath = word2007ToHtmlTest(new File(doc.getDocumentPath()),2);
+                   // htmlPath = word2007ToHtmlTest2(new File(doc.getDocumentPath()),2);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            projectDocumentService.deleteDocumentAndProject(id,htmlPath);
+              }
+            projectDocumentService.deleteDocumentAndProject(id,htmlPath);*/
+            projectDocumentService.deleteDocumentAndProjectV2(ids);
 
-        }
+
+
 
         return new Result("0", "");
     }
@@ -213,9 +216,15 @@ public class ProjectDocumentController {
         String documentRealName = "";
         try {
             String fileName = Md5tools.MD5(file.getOriginalFilename());
-            path = config.getTbl_surf_glb_mul_file_path() +fileName+".docx";
-            file.transferTo(new File(path));
-            htmlPath = word2007ToHtmlTest(new File(path),1);
+            if(file.getOriginalFilename().contains("docx")){
+                path = config.getTbl_surf_glb_mul_file_path() +fileName+".docx";
+                file.transferTo(new File(path));
+                htmlPath = word2007ToHtmlTest(new File(path),1);
+            }else{
+                path = config.getTbl_surf_glb_mul_file_path() +fileName+".doc";
+                file.transferTo(new File(path));
+                htmlPath = word2007ToHtmlTest2(new File(path),1);
+            }
             documentRealName = file.getOriginalFilename();
         } catch (IOException e) {
             return new Result("001", e.getMessage());

@@ -17,5 +17,8 @@ public interface ProjectDocumentDao {
 
    void deleteDocumentAndProject(@Param("ids") String ids,@Param("htmlPath") String htmlPath);
 
+
+   void deleteDocumentAndProjectV2(@Param("ids") String ids);
+
    ProjectDocument  queryDocmentByID(Integer id);
 }

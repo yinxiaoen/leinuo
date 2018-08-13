@@ -34,7 +34,7 @@
 
 	<select id="readBookTitleByParentID"  resultType="org.spring.springboot.domain.LawBookDTO" parameterType="org.spring.springboot.domain.LawBookDTO">
 		select
-		<include refid="Base_Column_List" />
+		id, title, parentID,createTime,actionTime,action,orderNum
 		from tbl_leinuo_lawbook_title
 		<where>
 		<trim prefixOverrides="and">

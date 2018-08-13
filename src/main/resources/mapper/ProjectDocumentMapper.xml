@@ -211,5 +211,15 @@
 	</update>
 
 
+	<update id="deleteDocumentAndProjectV2"  parameterType="java.util.Map" >
+		delete from  tbl_leinuo_document WHERE id in (${ids});
+		delete from  tbl_leinuo_document_comment WHERE documentID in (${ids});
+		delete from  tbl_leinuo_document_relation WHERE documentID in (${ids});
+		delete from  tbl_leinuo_message WHERE documentID in (${ids});
+		delete from  tbl_image_source WHERE documentID in (${ids});
+	</update>
+
+
+
 
 </mapper>

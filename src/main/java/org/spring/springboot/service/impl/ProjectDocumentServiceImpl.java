@@ -41,6 +41,11 @@ public class ProjectDocumentServiceImpl implements ProjectDocumentService{
         return projectDocumentDao.queryDocmentByID(id);
     }
 
+    @Override
+    public void deleteDocumentAndProjectV2(String ids) {
+        projectDocumentDao.deleteDocumentAndProjectV2(ids);
+    }
+
 
     private void printProjectDocument(ProjectDocument document){
         switch (document.getCategoryID()){

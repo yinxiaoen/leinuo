@@ -18,4 +18,6 @@ public interface ProjectDocumentService {
     void deleteDocumentAndProject( String ids,String htmlPath);
 
     ProjectDocument  queryDocmentByID(Integer id);
+
+    void deleteDocumentAndProjectV2(String ids);
 }

@@ -26,6 +26,16 @@ public class ImageSourceController {
         return new Result("0", list);
     }
 
+    @RequestMapping(value = "/insertImage", method = RequestMethod.POST)
+    public Object insertImage(@RequestBody ImageServerDTO imageServerDTO) {
+         imageSourceService.insertLeiNuoImage(imageServerDTO);
+        return new Result("0", "success");
+    }
 
 
+    @RequestMapping(value = "/deleteImage", method = RequestMethod.GET)
+    public Object deleteImage( String ids) {
+        imageSourceService.deleteLeiNuoImageByIDs(ids);
+        return new Result("0", "success");
+    }
 }

@@ -13,4 +13,23 @@
 
 	</select>
 
+
+	<insert id="insertLeiNuoImage" parameterType="org.spring.springboot.domain.ImageServerDTO" >
+		insert into tbl_image_source(
+		<if test="imageUrl != null and imageUrl != '' ">imageUrl,</if>
+		<if test="documentID != null and documentID != '' ">documentID,</if>
+		imageType)
+		values(
+		<if test="imageUrl != null and imageUrl != '' ">#{imageUrl},</if>
+		<if test="documentID != null and documentID != '' ">#{documentID},</if>
+		#{imageType})
+	</insert>
+
+
+	<!--删除订单关联-->
+	<delete id="deleteLeiNuoImageByIDs" parameterType="java.util.Map">
+		DELETE 	 FROM tbl_image_source WHERE   id IN (${ids})
+	</delete>
+
+
 </mapper>

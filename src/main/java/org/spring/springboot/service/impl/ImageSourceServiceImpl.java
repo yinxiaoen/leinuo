@@ -23,4 +23,14 @@ public class ImageSourceServiceImpl implements ImageSourceService {
         List<ImageServerDTO> list =  imageSourceDao.queryImageTypeList(imageServerDTO);
         return list;
     }
+
+    @Override
+    public void insertLeiNuoImage(ImageServerDTO imageServerDTO) {
+        imageSourceDao.insertLeiNuoImage(imageServerDTO);
+    }
+
+    @Override
+    public void deleteLeiNuoImageByIDs(@Param("ids") String ids) {
+        imageSourceDao.deleteLeiNuoImageByIDs(ids);
+    }
 }

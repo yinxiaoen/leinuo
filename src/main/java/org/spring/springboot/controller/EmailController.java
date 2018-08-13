@@ -16,6 +16,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
 import java.io.File;
 import java.util.List;
 
@@ -61,7 +62,8 @@ public class EmailController {
             helper.setSubject(list.get(0).getDocumentRealName());
             helper.setText(list.get(0).getDocumentRealName());
             //注意项目路径问题，自动补用项目路径
-            FileSystemResource file = new FileSystemResource(new File(list.get(0).getDocumentPath()));
+            String filePath = MimeUtility.encodeText(list.get(0).getDocumentPath());
+            FileSystemResource file = new FileSystemResource(new File(filePath));
             //加入邮件
             helper.addAttachment(list.get(0).getDocumentRealName(), file);
             redisDao.setKeyByMin(key, "发送邮件给"+user.getUserName()+" 邮件："+list.get(0).getDocumentRealName());

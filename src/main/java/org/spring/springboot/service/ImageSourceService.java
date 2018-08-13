@@ -12,4 +12,9 @@ import java.util.List;
  */
 public interface ImageSourceService {
     List<ImageServerDTO> queryImageTypeList(ImageServerDTO imageServerDTO);
+
+    void insertLeiNuoImage(ImageServerDTO imageServerDTO);
+
+
+    void deleteLeiNuoImageByIDs(@Param("ids") String ids);
 }
