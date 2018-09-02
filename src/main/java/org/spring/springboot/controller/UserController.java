@@ -38,7 +38,7 @@ public class UserController {
         /**
          * 判断验证码是否正确
          */
-        if(CommonUtils.isBlank(userDTO.getHeadImageUrl())){
+        if(!CommonUtils.isBlank(userDTO.getHeadImageUrl())){
             userDTO.setHeadImageUrl(CommonUtils.getHeadImg());
         }
         Boolean  codeIsRight = CommonUtils.isHaveSMSLoginID(userDTO.getSmsCode());
