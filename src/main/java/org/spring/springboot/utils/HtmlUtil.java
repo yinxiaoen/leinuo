@@ -21,6 +21,13 @@ public class HtmlUtil {
     }
 
 
+    public static String returnHeadJS() {
+        StringJoiner join = new StringJoiner("");
+        join.add("<html><head><meta charset=utf-8>");
+        return join.toString();
+    }
+
+
     public static String returnDOCDownJS() {
         StringJoiner join = new StringJoiner("");
         join.add("<img src=\"http://39.107.247.32:8081/headerImage/yixiajia.png\" alt=\"头像\" width=\"250\" height=\"100\" class=\"preview\" title=\"xiajia\"/>");
@@ -55,6 +62,8 @@ public class HtmlUtil {
 
                 StringBuffer str = buffer.replace(startIndex, startIndex+7,
                         newContent);
+                String contect = str.toString();
+                contect = contect.replace("<html><head>","<html><head><meta charset=utf-8>");
                 File file = new File(path1);
                 if (file.exists()){
                     file.delete();
@@ -63,10 +72,47 @@ public class HtmlUtil {
                     file.createNewFile();
                 }
                 FileWriter fileWriter = new FileWriter(path1);
-                fileWriter.write(str.toString());
+                fileWriter.write(contect);
                 fileWriter.flush();
                 fileWriter.close();
             }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+ /*   public static void main(String[] args){
+        replaceHtmlTest("C:\\Users\\Administrator\\Desktop\\123\\1536126137595.html");
+    }*/
+
+    public static void replaceHtmlTest(String path) {
+        try {
+            path = path.replace("http://39.107.247.32:8081","/leinuo/resource");
+            FileReader fr = new FileReader(path);
+            BufferedReader br = new BufferedReader(fr);
+            String node = null;
+            StringBuffer buffer = new StringBuffer();
+            while ((node = br.readLine()) != null) {
+                buffer.append(node);
+            }
+
+            String contect = buffer.toString();
+            contect = contect.replace("<html><head>","<html><head><meta charset=utf-8>");
+            File file = new File(path);
+            if (file.exists()){
+                file.delete();
+            }else{
+                file.createNewFile();
+            }
+            FileWriter fileWriter = new FileWriter(path);
+            fileWriter.write(contect);
+            fileWriter.flush();
+            fileWriter.close();
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {

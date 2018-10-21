@@ -33,6 +33,6 @@ public class RedisDao {
 
     public  void setKeyByMin(String key,String value){
         ValueOperations<String, String> ops = template.opsForValue();
-        ops.set(key,value,15, TimeUnit.MINUTES);//1分钟过期
+        ops.set(key,value,5, TimeUnit.MINUTES);//1分钟过期
     }
 }

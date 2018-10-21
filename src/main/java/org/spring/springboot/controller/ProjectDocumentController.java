@@ -58,7 +58,7 @@ public class ProjectDocumentController {
     @Autowired
     private ImageProperties imageProperties;
     @RequestMapping(value = "/document/queryProjectAndDocument", method = RequestMethod.POST)
-    public Object findOneCity(@RequestBody ProjectDocument paramDTO) {
+    public Object queryProjectAndDocument(@RequestBody ProjectDocument paramDTO) {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         DateFormat sdfTime = new SimpleDateFormat("yyyyMMdd");
         try {
@@ -83,6 +83,9 @@ public class ProjectDocumentController {
             } catch (ParseException e1) {
                 e1.printStackTrace();
             }
+        });
+        list.forEach(e->{
+            e.setDocumentName("  ".concat(e.getDocumentName()));
         });
         return new Result("0", list);
     }

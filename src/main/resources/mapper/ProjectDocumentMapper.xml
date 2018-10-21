@@ -73,7 +73,7 @@
 			        and action !=2
 			</trim>
 		</where>
-		ORDER  BY  createTime DESC
+		ORDER  BY  actionTime DESC
 	</select>
 
 	<select id="queryDocmentByID"  resultType="org.spring.springboot.domain.ProjectDocument" parameterType="java.lang.Integer">
